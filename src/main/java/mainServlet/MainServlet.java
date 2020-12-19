@@ -11,12 +11,14 @@ import java.io.PrintWriter;
 public class MainServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        PrintWriter printWriter = resp.getWriter();
+//        printWriter.println("Sosi pisku");
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
         HttpSession session = req.getSession(false);
         boolean resetParam = false;
         if (session == null) {
-            req.getRequestDispatcher("target/course-0.0/WEB-INF/classes/Login/LoginForm.html").include(req, resp);
+            req.getRequestDispatcher("html/login/login_default.html").include(req, resp);
             out.println("<br>Login to make a post");
         }
     }
