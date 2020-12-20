@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Schedule</title>
+    <style>
+        body{
+            user-select: none;
+        }
+        .header{
+            cursor: default;
+            display: block;
+            align-content: center;
+            text-align: center;
+
+        }
+        ul{
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        li {
+            list-style: none;
+            background: #DADEDF;
+            height: 0;
+            line-height: 2em;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100%;
+            color: #4A82D7;
+            cursor: default;
+            display: block;
+        }
+        li.subject {
+            height: 2em;
+            margin: 2px 0;
+        }
+        table{
+            width: 100%;
+            border: 10px;
+            table-layout: fixed;
+            align-content: center;
+        }
+        table.subjList{
+            display: none;
+            color: #4A82D7;
+        }
+        th,td{
+            padding: 5px;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+<script>
+    function hide_table(param){
+        var classes = document.getElementsByClassName("subjList");
+        if(classes[param].style.display === "table"){
+            classes[param].style.display = "none";
+            return;
+        }else{
+            classes[param].style.display = "table";
+            return;
+        }
+    }
+
+    document.getElementById('add-to-list').onclick = function() {
+        var list = document.getElementById('list');
+        var newLI = document.createElement('li');
+        newLI.innerHTML = 'A new item';
+        list.appendChild(newLI);
+        setTimeout(function() {
+            newLI.className = newLI.className + " show";
+        }, 10);
+    }
+
+</script>
+
+<div class="header">
+    <h1>Online schedule</h1>
