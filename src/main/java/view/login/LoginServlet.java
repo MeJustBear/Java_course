@@ -3,31 +3,38 @@ package view.login;
 import model.DBConnector;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 public class LoginServlet extends HttpServlet {
+    DBConnector connector;
+
     @Override
     public void init() throws ServletException {
-        DBConnector connector = DBConnector.getInstance();
+        connector = DBConnector.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter out = resp.getWriter();
         HttpSession session = req.getSession(false);
         if (session == null) {
-            req.getRequestDispatcher("/html/login/login_default.html").include(req, resp);
+        req.getRequestDispatcher("/html/login/login_default.html").include(req, resp);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter printWriter = resp.getWriter();
-        printWriter.println("<b1>Skin' tomu na kogo podrochil</b1>");
+        String name = req.getParameter("uname");
+        String psw = req.getParameter("psw");
+        if (name != null && psw != null) {
+            if (connector.checkUsernamePassword(name, psw)) {
+                HttpSession session = req.getSession();
+                Cookie cookie = new Cookie("name",name);
+                resp.addCookie(cookie);
+                session.setAttribute("name", name);
+                String path = req.getContextPath() + "/schedule/";
+                resp.sendRedirect(path);
+            }
+        }
     }
 }

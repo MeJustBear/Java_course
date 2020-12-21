@@ -1,36 +1,42 @@
 package myDB;
 
+import org.xml.sax.SAXException;
 import myDB.supportClasses.Group;
-import myDB.supportClasses.MDNode;
+import myDB.supportClasses.dataNode;
+import myDB.supportClasses.parser;
 import myDB.workers.Worker;
 import myDB.workers.Admin;
 import myDB.workers.Student;
 import myDB.workers.Teacher;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class myDataBase {
 
-//    public static void main(String[] args) throws FileNotFoundException {
-//        myDataBase mDB = new myDataBase();
-//        for (int i = 0; i < 10; i++) {
-//            i += 1;
-//            i -= 1;
-//        }
-//    }
+    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException {
+        myDataBase mDB = new myDataBase();
+        for (int i = 0; i < 10; i++) {
+            i += 1;
+            i -= 1;
+        }
+    }
 
     private HashMap<String, String> pwdBase = new HashMap<>();
     private HashMap<String, List<Worker>> workers = new HashMap<>();
     private HashMap<Integer, Group> groups = new HashMap<>();
-    private ArrayList<MDNode> mdNodes = new ArrayList<>();
+    private ArrayList<dataNode> dataNodes;//= new ArrayList<>();
+    DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-    public myDataBase() throws FileNotFoundException {
+    public myDataBase() throws IOException, ParserConfigurationException, SAXException {
         String pwdPath = "/home/pavel/IdeaProjects/course/course_v0/src/main/webapp/resource/un_psw.txt";
         String namesPath = "/home/pavel/IdeaProjects/course/course_v0/src/main/webapp/resource/un_ns.txt";
         String groupsPath = "/home/pavel/IdeaProjects/course/course_v0/src/main/webapp/resource/group_list.txt";
-        String mdsPath = "/home/pavel/IdeaProjects/course/course_v0/src/main/webapp/resource/group_list.txt";
+        String mdsPath = "/home/pavel/IdeaProjects/course/course_v0/src/main/webapp/resource/subjects_data.xml";
 
         readPasswords(pwdPath);
         readNames(namesPath);
@@ -38,68 +44,16 @@ public class myDataBase {
         readMDS(mdsPath);
     }
 
-    private void readMDS(String mdsPath) throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File(mdsPath));
-        String tmp = scanner.nextLine();
-        while (scanner.hasNext()) {
-            if(!tmp.equals("newmds")){
-                break;
-            }
-            MDNode node = new MDNode();
-            tmp = scanner.nextLine();
-            String[] subStr = tmp.split(" ");
-            List<Worker> teachs = workers.get("Teacher");
-            for (Worker w : teachs) {
-                if (w.getUn().equals(subStr[1])) {
-                    node.setTeacher((Teacher) w);
-                    break;
-                }
-            }
-            tmp = scanner.nextLine();
-            tmp = tmp.substring(8, tmp.length());
-            node.setSubject(tmp);
-            tmp = scanner.nextLine();
-            tmp = tmp.substring(6, tmp.length());
-            int check = Integer.parseInt(tmp.trim());
-            node.setGroup(groups.get(check));
-            tmp = scanner.nextLine();
-            tmp = tmp.substring(7,tmp.length());
-            node.setLessonName(tmp);
-            tmp = scanner.nextLine();
-            tmp = tmp.substring(5,tmp.length());
-            node.setLessonDate(tmp);
-            tmp = scanner.nextLine();
-            if(tmp.startsWith("service info")){
-                tmp = scanner.nextLine();
-                String comment = null;
-                Student st = null;
-                int mark = 0;
-                while(!tmp.equals("newmds")){
-                    subStr = tmp.split(" ");
-                    if(subStr[0].equals("name:")){
-                        tmp = tmp.substring(5,tmp.length()).trim();
-                        List<Worker> studs = workers.get("Student");
-                        for(Worker w: studs){
-                            if(w.getUn().equals(tmp)){
-                                st = (Student) w;
-                                break;
-                            }
-                        }
-                        tmp = scanner.nextLine();
-                        tmp = tmp.substring(5,tmp.length());
-                        mark = Integer.parseInt(tmp.trim());
-                        tmp = scanner.nextLine();
-                        subStr = tmp.split(" ");
-                        if(subStr.length > 1){
-                            tmp = tmp.substring(9,tmp.length());
-                        }
-                        comment = tmp;
-                    }
-                    node.addStudentMD(st,mark,comment);
-                    tmp = scanner.nextLine();
-                }
-            }
+    public boolean findPas(String name, String password){
+        if(pwdBase.get(name).equals(password)){
+            return true;
+        }else{
+            return false;
         }
+    }
+
+    private void readMDS(String mdsPath) throws IOException, ParserConfigurationException, SAXException {
+        dataNodes = parser.parseXML(mdsPath,format);
     }
 
 
@@ -160,4 +114,7 @@ public class myDataBase {
         workers.put("Admin", admins);
     }
 
+    public HashMap<String, List<Worker>> getWorkers() {
+        return workers;
+    }
 }
