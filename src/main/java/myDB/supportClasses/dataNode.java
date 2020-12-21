@@ -19,6 +19,18 @@ public class dataNode {
 
     }
 
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public ArrayList<lesson> getLessons() {
+        return lessons;
+    }
+
+    public String getTeacherId() {
+        return teacherId;
+    }
+
     public String getSubjectName() {
         return subjectName;
     }

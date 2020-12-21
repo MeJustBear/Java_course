@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class MainServlet extends HttpServlet {
 
@@ -42,10 +43,32 @@ public class MainServlet extends HttpServlet {
         HttpSession session = req.getSession();
         Worker w = connector.getWorker(session.getAttribute("name"));
         out.println("<h2>" + w.getName() + " " + w.getSurname() + "</h2>");
-        if(w instanceof Student){
+        boolean isStudent = w instanceof Student;
+        if(isStudent){
             out.println("<h3>Group " + ((Student) w).getGroup() + "</h3>");
         }
         out.println("</div>");
-        HashMap<String, ArrayList<Subject>> data = connector.getSubjects(session.getAttribute("name"));
+        if(isStudent) {
+            int counter = 0;
+            out.print("<div>\n" + "<ul id=\"mainList\">\n");
+            HashMap<String, Subject> data = connector.getSubjects(session.getAttribute("name"));
+            for(Map.Entry<String,Subject> entry : data.entrySet()){
+                out.print( "<li class=\"subject\" onclick=\"hide_table(" + counter + ")\">" + entry.getKey() + ". Lecturer: " + entry.getValue().getTeacherName() + "</li>\n" +
+                        " <table class=\"subjList\">");
+                out.print("<tr>\n" + "<th>Lesson</th>\n" + "<th>Date</th>\n" + "<th>Mark</th>\n" + "<th>Comment</th>\n" + "</tr>");
+                ArrayList<String> lessonName = entry.getValue().getLessonName();
+                ArrayList<String> lessonDate = entry.getValue().getLessonDate();
+                ArrayList<Integer> mark = entry.getValue().getMark();
+                ArrayList<String> comment = entry.getValue().getComment();
+                int size = lessonName.size();
+                for(int i = 0; i < size; i++){
+                    out.print("<tr>\n <td>" + lessonName.get(i) + "</td>\n <td>" + lessonDate.get(i) + "</td>\n <td>" + mark.get(i) +"</td>\n<td>" + comment.get(i) +
+                            "</td>\n" + "</tr>");
+                }
+                counter++;
+                out.print("</table>");
+                //entry.getValue().getTeacherName();
+            }
+        }
     }
 }

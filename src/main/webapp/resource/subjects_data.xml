@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Data>
     <Subject>
-    <Name>subject 1</Name>
+    <Name>Subject 1</Name>
     <Teacher>te1</Teacher>
     <Group>1</Group>
     <Lessons>
@@ -38,6 +38,45 @@
             </Students>
         </Lesson>
     </Lessons>
+    </Subject>
+    <Subject>
+        <Name>Subject 2</Name>
+        <Teacher>te2</Teacher>
+        <Group>1</Group>
+        <Lessons>
+            <Lesson>
+                <Name> practice 1</Name>
+                <Date> 01.01.2020</Date>
+                <Students>
+                    <Student>
+                        <Name>st1</Name>
+                        <Mark>5</Mark>
+                        <Comment>Good work</Comment>
+                    </Student>
+                    <Student>
+                        <Name>st2</Name>
+                        <Mark>4</Mark>
+                        <Comment></Comment>
+                    </Student>
+                </Students>
+            </Lesson>
+            <Lesson>
+                <Name> practice 2</Name>
+                <Date> 10.01.2020</Date>
+                <Students>
+                    <Student>
+                        <Name>st1</Name>
+                        <Mark>4</Mark>
+                        <Comment></Comment>
+                    </Student>
+                    <Student>
+                        <Name>st2</Name>
+                        <Mark>3</Mark>
+                        <Comment></Comment>
+                    </Student>
+                </Students>
+            </Lesson>
+        </Lessons>
     </Subject>
 </Data>
 

@@ -14,6 +14,13 @@ public class lesson {
             this.comment = comment;
         }
 
+        public int getMark() {
+            return mark;
+        }
+
+        public String getComment() {
+            return comment;
+        }
     }
 
     String name = null;
@@ -22,6 +29,10 @@ public class lesson {
 
     public lesson(){
 
+    }
+
+    public lessonNode getNodes(String studentId){
+        return results.get(studentId);
     }
 
     public void setDate(LocalDate date) {
@@ -43,6 +54,18 @@ public class lesson {
 
     public void addNodeToMap(String student,int mark, String comment ){
         results.put(student,new lessonNode(mark,comment));
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public HashMap<String, lessonNode> getResults() {
+        return results;
+    }
+
+    public LocalDate getDate() {
+        return date;
     }
 
 }

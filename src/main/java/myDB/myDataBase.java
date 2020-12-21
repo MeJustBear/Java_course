@@ -44,6 +44,10 @@ public class myDataBase {
         readMDS(mdsPath);
     }
 
+    public ArrayList<dataNode> getNodes() {
+        return dataNodes;
+    }
+
     public boolean findPas(String name, String password){
         if(pwdBase.get(name).equals(password)){
             return true;
