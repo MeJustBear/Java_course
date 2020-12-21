@@ -1,0 +1,23 @@
+newmds
+Teacher: te1
+Subject: subject1
+Group: 1
+Lesson: practice 1
+Date: 01.01.2020
+service info
+name: st1
+mark: 5
+comment: Good work
+name: st3
+mark: 4
+comment:
+newmds
+Teacher: te2
+Subject: subject1
+Group: 2
+Lesson: practice 1
+Date: 01.01.2020
+service info
+name: st2
+mark: 5
+comment: Good work
