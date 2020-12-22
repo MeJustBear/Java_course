@@ -54,7 +54,12 @@ public class parser {
                                         if (o == 1) {
                                             student = newList.item(o).getTextContent();
                                         } else if (o == 3) {
-                                            mark = Integer.parseInt(newList.item(o).getTextContent());
+                                            String s = newList.item(o).getTextContent();
+                                            if(!s.isEmpty()){
+                                                mark = Integer.parseInt(s);
+                                            }else{
+                                                mark = 0;
+                                            }
                                         } else if (o == 5) {
                                             comment = newList.item(o).getTextContent();
                                             les.addNodeToMap(student, mark, comment);

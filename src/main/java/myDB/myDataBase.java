@@ -29,7 +29,7 @@ public class myDataBase {
     private HashMap<String, String> pwdBase = new HashMap<>();
     private HashMap<String, List<Worker>> workers = new HashMap<>();
     private HashMap<Integer, Group> groups = new HashMap<>();
-    private ArrayList<dataNode> dataNodes;//= new ArrayList<>();
+    private ArrayList<dataNode> dataNodes;
     DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     public myDataBase() throws IOException, ParserConfigurationException, SAXException {
@@ -42,6 +42,10 @@ public class myDataBase {
         readNames(namesPath);
         readGroups(groupsPath);
         readMDS(mdsPath);
+    }
+
+    public Group getGroup(int groupId){
+        return groups.get(groupId);
     }
 
     public ArrayList<dataNode> getNodes() {

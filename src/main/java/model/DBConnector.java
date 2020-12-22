@@ -1,6 +1,7 @@
 package model;
 
 import myDB.*;
+import myDB.supportClasses.Group;
 import myDB.supportClasses.dataNode;
 import myDB.supportClasses.lesson;
 import myDB.workers.Student;
@@ -10,9 +11,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class DBConnector {
     private static myDataBase dataBase;
@@ -36,6 +35,28 @@ public class DBConnector {
 
     public boolean checkUsernamePassword(String username, String password) {
         return dataBase.findPas(username, password);
+    }
+
+    public HashMap<String,ArrayList<Group>> getSubjectsForTeachers(Worker worker){
+        Teacher teacher = (Teacher) worker;
+        HashMap<String, ArrayList<Group>> map = new HashMap<>();
+        TreeSet<String> subjNames = new TreeSet<>();
+        ArrayList<dataNode> nodes = dataBase.getNodes();
+        String subjName = null;
+        for(dataNode dn : nodes ){
+            if(dn.getTeacherId().equals(teacher.getUn())){
+                subjName = dn.getSubjectName();
+                if(!subjNames.contains(subjName)){
+                    map.put(subjName,new ArrayList<>());
+                    map.get(subjName).add(dataBase.getGroup(dn.getGroupId()));
+
+                }else {
+                    map.get(subjName).add(dataBase.getGroup(dn.getGroupId()));
+                }
+            }
+            subjNames.add(subjName);
+        }
+        return map;
     }
 
     public HashMap<String, Subject> getSubjects(Object obj) {

@@ -22,4 +22,13 @@
         <url-pattern>/schedule/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>view.logout.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/schedule/logout/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>

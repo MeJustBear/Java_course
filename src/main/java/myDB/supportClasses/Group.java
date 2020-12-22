@@ -32,4 +32,8 @@ public class Group {
         Group cG = (Group) obj;
         return cG.groupId == this.groupId;
     }
+
+    public int getPopulation(){
+        return list.size();
+    }
 }
