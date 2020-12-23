@@ -85,6 +85,10 @@ public class lesson {
         return results;
     }
 
+    public LocalDate getLocalDate(){
+        return date;
+    }
+
     public String getDate() {
         return date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
     }

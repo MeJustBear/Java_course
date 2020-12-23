@@ -11,21 +11,11 @@ import myDB.workers.Student;
 import myDB.workers.Teacher;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class myDataBase {
-
-    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException {
-        myDataBase mDB = new myDataBase();
-        for (int i = 0; i < 10; i++) {
-            i += 1;
-            i -= 1;
-        }
-    }
 
     private HashMap<String, String> pwdBase = new HashMap<>();
     private HashMap<String, List<Worker>> workers = new HashMap<>();
@@ -43,24 +33,79 @@ public class myDataBase {
         readNames(namesPath);
         readGroups(groupsPath);
         readMDS(mdsPath);
+
     }
 
-    public void save(){
-        return;
-//        String pwdPath = "/home/pavel/IdeaProjects/course/course_v0/src/main/webapp/resource/un_psw.txt";
-//        String namesPath = "/home/pavel/IdeaProjects/course/course_v0/src/main/webapp/resource/un_ns.txt";
-//        String groupsPath = "/home/pavel/IdeaProjects/course/course_v0/src/main/webapp/resource/group_list.txt";
-//        String mdsPath = "/home/pavel/IdeaProjects/course/course_v0/src/main/webapp/resource/subjects_data.xml";
+    public void save() throws IOException {
+        String pwdPath = "/home/pavel/IdeaProjects/course/course_v0/src/main/webapp/resource/un_psw.txt";
+        String namesPath = "/home/pavel/IdeaProjects/course/course_v0/src/main/webapp/resource/un_ns.txt";
+        String groupsPath = "/home/pavel/IdeaProjects/course/course_v0/src/main/webapp/resource/group_list.txt";
+        String mdsPath = "/home/pavel/IdeaProjects/course/course_v0/src/main/webapp/resource/subjects_data.xml";
 
-//        savePasswords(pwdPath);
-//        saveNames(namesPath);
-//        saveGroups(groupsPath);
-//        saveMDS(mdsPath);
+        savePasswords(pwdPath);
+        saveNames(namesPath);
+        saveGroups(groupsPath);
+        saveMDS(mdsPath);
     }
 
-    private void saveMDS(String mdsPath) {
+    private void saveGroups(String path) throws IOException {
+        //FileWriter fileWriter = new FileWriter(path);
+        PrintStream printStream = new PrintStream(path);
+        for(Map.Entry<Integer,Group> entry : groups.entrySet()){
+            printStream.print(entry.getKey().toString() + " ");
+            for(Student st : entry.getValue().getList()){
+                String s = new String(entry.getKey().toString() + " " + st.getName() + " " + st.getSurname());
+                printStream.print(st.getUn() + " ");
+            }
+            printStream.println();
+        }
+        printStream.close();
+    }
 
+    private void saveNames(String path) throws IOException {
+        FileWriter fileWriter = new FileWriter(path);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        for(Map.Entry<String,List<Worker>> entry : workers.entrySet()){
+            List<Worker> curWorkers = entry.getValue();
+            for(Worker w : curWorkers){
+                printWriter.println(w.getUn() + " " + w.getName() + " " + w.getSurname());
+            }
+        }
+        printWriter.close();
+    }
 
+    private void saveMDS(String mdsPath) throws IOException {
+        FileWriter fileWriter = new FileWriter(mdsPath);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        printWriter.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n <Data>");
+        for(dataNode dn : dataNodes){
+            printWriter.println("<Subject>");
+            printWriter.println("<Name>" + dn.getSubjectName() + "</Name>\n<Teacher>" + dn.getTeacherId() + "</Teacher>\n<Group>" + dn.getGroupId() + "</Group>\n<Lessons>");
+            ArrayList<lesson> lessons = dn.getLessons();
+            for(lesson l : lessons){
+                printWriter.println("<Lesson>\n<Name> " + l.getName() + "</Name>\n<Date> " + l.getLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) +
+                        "</Date>\n<Students>");
+                HashMap<String, lesson.lessonNode> lessonMap = l.getResults();
+                for(Map.Entry<String,lesson.lessonNode> curStud : lessonMap.entrySet()){
+                    printWriter.println("<Student>\n<Name>" + curStud.getKey() + "</Name>\n<Mark>" + curStud.getValue().getMark() +
+                            "</Mark>\n<Comment>" + curStud.getValue().getComment()
+                            + "</Comment>\n</Student>");
+                }
+                printWriter.println("</Students>\n</Lesson>");
+            }
+            printWriter.print("</Lessons></Subject>\n");
+        }
+        printWriter.println("</Data>");
+        printWriter.close();
+    }
+
+    private void savePasswords(String path) throws IOException {
+        FileWriter fileWriter = new FileWriter(path);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        for(Map.Entry<String,String> map : pwdBase.entrySet()){
+            printWriter.println(map.getKey() + " " + map.getValue());
+        }
+        printWriter.close();
     }
 
     public Group getGroup(int groupId){

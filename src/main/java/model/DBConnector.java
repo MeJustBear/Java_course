@@ -217,7 +217,7 @@ public class DBConnector {
         }
     }
 
-    public void saveDB() {
+    public void saveDB() throws IOException {
         dataBase.save();
     }
 }

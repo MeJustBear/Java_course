@@ -16,6 +16,10 @@ public class Group {
         return groupId;
     }
 
+    public ArrayList<Student> getList() {
+        return list;
+    }
+
     public void addStudent(Student st){
         list.add(st);
     }

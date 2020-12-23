@@ -71,7 +71,11 @@ public class MainServlet extends HttpServlet {
 
     @Override
     public void destroy() {
-        connector.saveDB();
+        try {
+            connector.saveDB();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //TODO
     }
 
