@@ -1,5 +1,5 @@
 function hide_table(param){
-    var classes = document.getElementsByClassName("subjList");
+    let classes = document.getElementsByClassName("subjList");
     if(classes[param].style.display === "table"){
         classes[param].style.display = "none";
         return;
@@ -7,4 +7,15 @@ function hide_table(param){
         classes[param].style.display = "table";
         return;
     }
+}
+
+function hide_button() {
+    let but = document.getElementById('ChangeButton');
+    if (but !== undefined)
+        if (but.style.display === "block") {
+            but.style.display = "none";
+            return;
+        } else {
+            but.style.display = "block";
+        }
 }

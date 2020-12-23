@@ -1,5 +1,6 @@
 package myDB;
 
+import myDB.supportClasses.lesson;
 import org.xml.sax.SAXException;
 import myDB.supportClasses.Group;
 import myDB.supportClasses.dataNode;
@@ -42,6 +43,24 @@ public class myDataBase {
         readNames(namesPath);
         readGroups(groupsPath);
         readMDS(mdsPath);
+    }
+
+    public void save(){
+        return;
+//        String pwdPath = "/home/pavel/IdeaProjects/course/course_v0/src/main/webapp/resource/un_psw.txt";
+//        String namesPath = "/home/pavel/IdeaProjects/course/course_v0/src/main/webapp/resource/un_ns.txt";
+//        String groupsPath = "/home/pavel/IdeaProjects/course/course_v0/src/main/webapp/resource/group_list.txt";
+//        String mdsPath = "/home/pavel/IdeaProjects/course/course_v0/src/main/webapp/resource/subjects_data.xml";
+
+//        savePasswords(pwdPath);
+//        saveNames(namesPath);
+//        saveGroups(groupsPath);
+//        saveMDS(mdsPath);
+    }
+
+    private void saveMDS(String mdsPath) {
+
+
     }
 
     public Group getGroup(int groupId){
@@ -124,5 +143,18 @@ public class myDataBase {
 
     public HashMap<String, List<Worker>> getWorkers() {
         return workers;
+    }
+
+    public lesson getLesson(String teacherId, String subj, String les, int gr) {
+        for(dataNode dn : dataNodes){
+            if(dn.getSubjectName().equals(subj) && dn.getTeacherId().equals(teacherId) && dn.getGroupId() == gr){
+                for(lesson l : dn.getLessons()){
+                    if(l.getName().equals(les)){
+                        return l;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

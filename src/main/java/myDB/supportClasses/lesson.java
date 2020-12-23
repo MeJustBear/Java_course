@@ -1,16 +1,37 @@
 package myDB.supportClasses;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class lesson {
 
+    public lesson(String subjName, LocalDate localDate) {
+        name = subjName;
+        date = localDate;
+    }
+
     public class lessonNode{
-        int mark;
-        String comment;
+        int mark = 0;
+        String comment = null;
+
+        public lessonNode(){
+            this.mark = 0;
+            this.comment = null;
+        }
 
         public lessonNode(int mark, String comment){
             this.mark = mark;
+            this.comment = comment;
+        }
+
+        public void setMark(int mark) {
+            this.mark = mark;
+        }
+
+        public void setComment(String comment) {
             this.comment = comment;
         }
 
@@ -27,8 +48,8 @@ public class lesson {
     LocalDate date = null;
     HashMap<String,lessonNode> results = new HashMap<>();
 
-    public lesson(){
-
+    public Set<String> getstudentsList(){
+        return results.keySet();
     }
 
     public lessonNode getNodes(String studentId){
@@ -47,7 +68,7 @@ public class lesson {
         this.results = results;
     }
 
-    public lesson(String name, LocalDate date){
+    public lesson(){
         this.date = date;
         this.name = name;
     }
@@ -64,8 +85,11 @@ public class lesson {
         return results;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public String getDate() {
+        return date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
     }
 
+    public lessonNode getEmptyNode(){
+        return new lessonNode();
+    }
 }

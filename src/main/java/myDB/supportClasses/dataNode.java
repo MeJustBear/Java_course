@@ -1,6 +1,10 @@
 package myDB.supportClasses;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class dataNode {
     String subjectName = null;
@@ -49,5 +53,16 @@ public class dataNode {
 
     public void setTeacherId(String teacherId) {
         this.teacherId = teacherId;
+    }
+
+    public void pushBackLesson(String subjName, LocalDate localDate) {
+        HashMap<String, lesson.lessonNode> map = new HashMap<>();
+        Set<String> studNames = lessons.get(0).results.keySet();
+        for(String name : studNames){
+            map.put(name,new lesson().getEmptyNode());
+        }
+        lesson l = new lesson(subjName,localDate);
+        l.setResults(map);
+        lessons.add(l);
     }
 }
