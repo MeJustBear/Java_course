@@ -34,6 +34,19 @@ li.subject {
     height: 2em;
     margin: 2px 0;
 }
+li.studentList{
+    background: none;
+    list-style: none;
+    line-height: 2em;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100%;
+    color: #4A82D7;
+    cursor: default;
+    display: block;
+    height: 1%;
+}
 table{
     width: 100%;
     border: 10px;

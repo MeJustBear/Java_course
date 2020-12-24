@@ -18,10 +18,12 @@ import java.util.*;
 public class DBConnector {
     private static myDataBase dataBase;
     private static DBConnector instance;
+    private static HashMap<String, String> sameFields;
 
     private DBConnector() {
         try {
             dataBase = new myDataBase();
+            sameFields = new HashMap<>();
         } catch (IOException | ParserConfigurationException | SAXException e) {
             e.printStackTrace();
         }
@@ -35,8 +37,16 @@ public class DBConnector {
         return instance;
     }
 
+    public HashMap<String,String> getSameFields(){
+        return sameFields;
+    }
+
     public boolean checkUsernamePassword(String username, String password) {
         return dataBase.findPas(username, password);
+    }
+
+    public HashMap<Integer, Group> getListOfGRoups(){
+        return dataBase.getGroups();
     }
 
     public Group getGroup(int groupId) {
@@ -134,7 +144,19 @@ public class DBConnector {
                 }
             }
         }
+        if (name.startsWith("ad")) {
+            List<Worker> workerList = workers.get("Admin");
+            for (Worker w : workerList) {
+                if (w.getUn().equals(name)) {
+                    return w;
+                }
+            }
+        }
         return null;
+    }
+
+    public List<Worker> getTeachers(){
+        return dataBase.getWorkers().get("Teacher");
     }
 
     public ArrayList<Subject> getContcreteSubjs(Group group, Worker w, String subName) {
@@ -219,5 +241,9 @@ public class DBConnector {
 
     public void saveDB() throws IOException {
         dataBase.save();
+    }
+
+    public void removeStudent(String studentName, String[] str) {
+
     }
 }

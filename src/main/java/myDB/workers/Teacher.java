@@ -10,6 +10,14 @@ public class Teacher extends Worker{
         super(un, name, surname);
     }
 
+    public void setSubjects(ArrayList<String> subjs){
+        subjects = subjs;
+    }
+
+    public ArrayList<String> getSubjects() {
+        return subjects;
+    }
+
     @Override
     public String getName() {
         return super.name;

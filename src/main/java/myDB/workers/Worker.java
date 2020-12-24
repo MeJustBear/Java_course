@@ -14,4 +14,5 @@ abstract public class Worker implements WorkerInterface {
     public String getUn() {
         return un;
     }
+
 }

@@ -33,7 +33,21 @@ public class myDataBase {
         readNames(namesPath);
         readGroups(groupsPath);
         readMDS(mdsPath);
+        setTeacherSubjects();
 
+    }
+
+    private void setTeacherSubjects() {
+        for(Worker worker : workers.get("Teacher")){
+            Teacher teacher = (Teacher) worker;
+            ArrayList<String> TeacherSubjects = new ArrayList<>();
+            for(dataNode dn : dataNodes){
+                if(dn.getTeacherId().equals(teacher.getUn())){
+                    TeacherSubjects.add(dn.getSubjectName());
+                }
+            }
+            teacher.setSubjects(TeacherSubjects);
+        }
     }
 
     public void save() throws IOException {
@@ -49,7 +63,6 @@ public class myDataBase {
     }
 
     private void saveGroups(String path) throws IOException {
-        //FileWriter fileWriter = new FileWriter(path);
         PrintStream printStream = new PrintStream(path);
         for(Map.Entry<Integer,Group> entry : groups.entrySet()){
             printStream.print(entry.getKey().toString() + " ");
@@ -201,5 +214,9 @@ public class myDataBase {
             }
         }
         return null;
+    }
+
+    public HashMap<Integer, Group> getGroups() {
+        return  groups;
     }
 }

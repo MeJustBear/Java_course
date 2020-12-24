@@ -20,7 +20,6 @@ import java.util.Map;
 public class MainServlet extends HttpServlet {
 
     DBConnector connector;
-    CurrentDataContainer currentDataContainer;
 
     @Override
     public void init() throws ServletException {
@@ -63,7 +62,6 @@ public class MainServlet extends HttpServlet {
                 }
 
             }
-            //out.println(req.getParameter("Student"));//req.getParameterNames().toString());
         }
         String path = req.getContextPath() + req.getRequestURI();
         resp.sendRedirect(path);
@@ -92,14 +90,14 @@ public class MainServlet extends HttpServlet {
 
         if (isStudent) {
             req.getRequestDispatcher("/html/routine/main_routine.html").include(req, resp);
-            out.println("<h2>" + w.getName() + " " + w.getSurname() + "</h2>");
+            out.println("<h2>" + w.getName() + " " + w.getSurname() + " | Student</h2>");
             drawStudentHood(out, w, session);
         }
 
         if (isTeacher) {
             if (((String) session.getAttribute("name")).startsWith("te")) {
                 req.getRequestDispatcher("/html/routine/main_routine.html").include(req, resp);
-                out.println("<h2>" + w.getName() + " " + w.getSurname() + "</h2>");
+                out.println("<h2>" + w.getName() + " " + w.getSurname() + " | Teacher</h2>");
                 drawTeacherHood(out, w, session, uri);
             } else {
                 req.getRequestDispatcher("/html/routine/no_permission.html").include(req, resp);
@@ -107,14 +105,22 @@ public class MainServlet extends HttpServlet {
         }
 
         if (isAdmin) {
-            req.getRequestDispatcher("/html/routine/main_routine.html").include(req, resp);
-            out.println("<h2>" + w.getName() + " " + w.getSurname() + "</h2></div>");
-            drawAdminHood(out, w, session);
+            if(uri.startsWith("/schedule/find_group/")){
+                connector.getSameFields().put("group",uri.split("/")[3]);
+                String path = req.getContextPath() + "/jsp/admin_cur_group.jsp";
+                resp.sendRedirect(path);
+            }else if(uri.startsWith("/schedule/gr")){
+                String[] str = uri.split("/");
+                if(str[3].equals("remove_student")){
+                    connector.removeStudent((String)req.getSession().getAttribute("StudentName"),str);
+                }
+            }else if(uri.startsWith("/schedule/")) {
+                String path = req.getContextPath() + "/jsp/admin_main.jsp";
+                resp.sendRedirect(path);
+            }
+//            out.println("<h2>" + w.getName() + " " + w.getSurname() + "</h2></div>");
+//            drawAdminHood(out, w, session);
         }
-
-    }
-
-    private void drawAdminHood(PrintWriter out, Worker w, HttpSession session) {
 
     }
 
