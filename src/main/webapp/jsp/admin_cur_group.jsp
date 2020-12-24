@@ -86,14 +86,14 @@
 
 <div id="zatemnenieRemoveLesson">
     <div id="oknoRemove" class="modal animate">
-        <form action="${pageContext.request.contextPath}/schedule/<%="gr"+ gr.getGroupId()%>/remove_student/" name="rmv" method="post">
+        <form action="${pageContext.request.contextPath}/schedule/<%="gr"+ gr.getGroupId()%>/remove_student/" name="rmv" method="get">
             <div class="container">
                 <label for="studentName"><b>Student Name</b></label>
                 <select id="studentName" name="StudentName" required="required">
                     <option value="">Chose student</option>
                     <%
                         for(Student st : gr.getList()){%>
-                            <option value="<%= st.getUn()%>"><%=st.getName() + " " +  st.getSurname()%></option>
+                            <option id="<%= st.getUn()%>" value="<%= st.getUn()%>"><%=st.getName() + " " +  st.getSurname()%></option>
                     <%}%>
                 </select>
             </div>

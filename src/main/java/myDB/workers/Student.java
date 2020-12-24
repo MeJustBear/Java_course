@@ -1,5 +1,7 @@
 package myDB.workers;
 
+import myDB.supportClasses.Group;
+
 public class Student extends Worker {
 
     int group;
@@ -42,5 +44,16 @@ public class Student extends Worker {
         super.surname = surname;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
 
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        Student cG = (Student) obj;
+        return cG.getUn() == this.getUn();
+    }
 }

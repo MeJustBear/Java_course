@@ -37,6 +37,32 @@ public class myDataBase {
 
     }
 
+    public void removeWorker(Worker curWorker){
+        if(curWorker instanceof Student){
+            Student student = (Student) curWorker;
+            for(dataNode dn : dataNodes){
+                if(dn.getGroupId() == student.getGroup()){
+                    for(lesson l : dn.getLessons()){
+                        l.removeStudent(student);
+                        break;
+                    }
+                }
+            }
+            Group stGroup = groups.get(student.getGroup());
+            stGroup.removeStudent(student);
+            List<Worker> workerList = workers.get("Student");
+            for(int i =0; i < workerList.size(); i++){
+                if(workerList.get(i).getUn().equals(student.getUn())){
+                    workerList.remove(i);
+                    break;
+                }
+            }
+            pwdBase.remove(student.getUn());
+        }
+
+
+    }
+
     private void setTeacherSubjects() {
         for(Worker worker : workers.get("Teacher")){
             Teacher teacher = (Teacher) worker;

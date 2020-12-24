@@ -112,7 +112,10 @@ public class MainServlet extends HttpServlet {
             }else if(uri.startsWith("/schedule/gr")){
                 String[] str = uri.split("/");
                 if(str[3].equals("remove_student")){
-                    connector.removeStudent((String)req.getSession().getAttribute("StudentName"),str);
+                    String s = req.getParameter("StudentName");
+                    connector.removeWorker(s,str);
+                    String path = req.getContextPath() + "/jsp/admin_main.jsp";
+                    resp.sendRedirect(path);
                 }
             }else if(uri.startsWith("/schedule/")) {
                 String path = req.getContextPath() + "/jsp/admin_main.jsp";

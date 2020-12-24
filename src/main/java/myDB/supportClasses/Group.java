@@ -20,6 +20,16 @@ public class Group {
         return list;
     }
 
+    public void removeStudent(Student st){
+        for(int i = 0; i < list.size(); i++){
+            Student s = list.get(i);
+            if(s.getUn().equals(st.getUn())){
+                list.remove(i);
+                return;
+            }
+        }
+    }
+
     public void addStudent(Student st){
         list.add(st);
     }

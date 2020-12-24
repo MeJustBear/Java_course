@@ -37,7 +37,7 @@ public class DBConnector {
         return instance;
     }
 
-    public HashMap<String,String> getSameFields(){
+    public HashMap<String, String> getSameFields() {
         return sameFields;
     }
 
@@ -45,7 +45,7 @@ public class DBConnector {
         return dataBase.findPas(username, password);
     }
 
-    public HashMap<Integer, Group> getListOfGRoups(){
+    public HashMap<Integer, Group> getListOfGRoups() {
         return dataBase.getGroups();
     }
 
@@ -155,7 +155,7 @@ public class DBConnector {
         return null;
     }
 
-    public List<Worker> getTeachers(){
+    public List<Worker> getTeachers() {
         return dataBase.getWorkers().get("Teacher");
     }
 
@@ -179,20 +179,20 @@ public class DBConnector {
     }
 
     public lesson getLesson(String teacherId, String subj, String les, int gr) {
-        lesson res = dataBase.getLesson(teacherId,subj,les,gr);
+        lesson res = dataBase.getLesson(teacherId, subj, les, gr);
         return res;
     }
 
     public void correctStudent(String stId, String comment, int mark, String uri) {
-        String subject = (uri.split("/"))[3].replaceAll("_"," ");
-        String les = (uri.split("/"))[4].replaceAll("_"," ");
+        String subject = (uri.split("/"))[3].replaceAll("_", " ");
+        String les = (uri.split("/"))[4].replaceAll("_", " ");
         Student student = (Student) this.getWorker(stId);
         ArrayList<dataNode> nodes = dataBase.getNodes();
-        for(dataNode dn : nodes){
-            if(dn.getSubjectName().equals(subject) && dn.getGroupId() == student.getGroup()){
+        for (dataNode dn : nodes) {
+            if (dn.getSubjectName().equals(subject) && dn.getGroupId() == student.getGroup()) {
                 ArrayList<lesson> lsons = dn.getLessons();
-                for(lesson l : lsons){
-                    if(l.getName().equals(les)){
+                for (lesson l : lsons) {
+                    if (l.getName().equals(les)) {
                         HashMap<String, lesson.lessonNode> map = l.getResults();
                         lesson.lessonNode ln = map.get(stId);
                         ln.setComment(comment);
@@ -206,17 +206,17 @@ public class DBConnector {
 
     public void makeNewLesson(String uri, String subject, String date, String subjName) {
         String[] str = date.split("-");
-        StringBuilder sb =  new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         sb.append(str[2] + "-" + str[1] + "-" + str[0]);
         date = sb.toString();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate localDate = LocalDate.parse(date,formatter);
+        LocalDate localDate = LocalDate.parse(date, formatter);
         str = uri.split("/");
         int groupId = Integer.parseInt(str[2].substring(2));
         ArrayList<dataNode> dataNodes = dataBase.getNodes();
-        for(dataNode dn : dataNodes){
-            if(dn.getSubjectName().equals(subject) && dn.getGroupId() == groupId){
-                dn.pushBackLesson(subjName,localDate);
+        for (dataNode dn : dataNodes) {
+            if (dn.getSubjectName().equals(subject) && dn.getGroupId() == groupId) {
+                dn.pushBackLesson(subjName, localDate);
                 return;
             }
         }
@@ -226,11 +226,11 @@ public class DBConnector {
         String[] str = uri.split("/");
         int groupId = Integer.parseInt(str[2].substring(2));
         ArrayList<dataNode> dataNodes = dataBase.getNodes();
-        for(dataNode dn : dataNodes){
-            if(dn.getSubjectName().equals(subject) && dn.getGroupId() == groupId){
+        for (dataNode dn : dataNodes) {
+            if (dn.getSubjectName().equals(subject) && dn.getGroupId() == groupId) {
                 ArrayList<lesson> dataNodeLesson = dn.getLessons();
-                for(int i = 0; i < dataNodeLesson.size(); i++) {
-                    if(dataNodeLesson.get(i).getName().equals(subjName)){
+                for (int i = 0; i < dataNodeLesson.size(); i++) {
+                    if (dataNodeLesson.get(i).getName().equals(subjName)) {
                         dataNodeLesson.remove(i);
                         return;
                     }
@@ -243,7 +243,8 @@ public class DBConnector {
         dataBase.save();
     }
 
-    public void removeStudent(String studentName, String[] str) {
-
+    public void removeWorker(String workerId, String[] uri) {
+        Worker w = this.getWorker(workerId);
+        dataBase.removeWorker(w);
     }
 }

@@ -1,5 +1,7 @@
 package myDB.supportClasses;
 
+import myDB.workers.Student;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -47,6 +49,11 @@ public class lesson {
     String name = null;
     LocalDate date = null;
     HashMap<String,lessonNode> results = new HashMap<>();
+
+    public void removeStudent(Student st){
+        if(results.get(st.getUn()) != null)
+        results.remove(st.getUn());
+    }
 
     public Set<String> getstudentsList(){
         return results.keySet();
