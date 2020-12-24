@@ -37,6 +37,14 @@ public class myDataBase {
 
     }
 
+    public int getNextId(Worker w){
+        if(w instanceof Student) {
+            List<Worker> workerList = workers.get("Student");
+            return workerList.size() + 1;
+        }
+        return 0;
+    }
+
     public void removeWorker(Worker curWorker){
         if(curWorker instanceof Student){
             Student student = (Student) curWorker;
@@ -126,6 +134,11 @@ public class myDataBase {
                         "</Date>\n<Students>");
                 HashMap<String, lesson.lessonNode> lessonMap = l.getResults();
                 for(Map.Entry<String,lesson.lessonNode> curStud : lessonMap.entrySet()){
+                    if(curStud.getKey() == null)
+                        continue;
+                    String comment = curStud.getValue().getComment();
+                    if(comment == null)
+                        comment = "";
                     printWriter.println("<Student>\n<Name>" + curStud.getKey() + "</Name>\n<Mark>" + curStud.getValue().getMark() +
                             "</Mark>\n<Comment>" + curStud.getValue().getComment()
                             + "</Comment>\n</Student>");
@@ -244,5 +257,36 @@ public class myDataBase {
 
     public HashMap<Integer, Group> getGroups() {
         return  groups;
+    }
+
+    public ArrayList<String> addWorker(Worker worker) {
+        ArrayList<String> list = new ArrayList<>();
+        if(worker instanceof Student){
+            Student student = (Student) worker;
+            int leftLimit = 48; // numeral '0'
+            int rightLimit = 122; // letter 'z'
+            int targetStringLength = 4;
+            Random random = new Random();
+
+            String password = random.ints(leftLimit, rightLimit + 1)
+                    .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                    .limit(targetStringLength)
+                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                    .toString();
+            pwdBase.put(worker.getUn(),password);
+
+            list.add(worker.getUn());
+            list.add(password);
+            workers.get("Student").add(worker);
+            groups.get((student.getGroup())).addStudent(student);
+            for(dataNode dn : dataNodes){
+                if(dn.getGroupId() == student.getGroup()){
+                    for(lesson l : dn.getLessons()){
+                        l.addNodeToMap(student.getUn(),0,new String(""));
+                    }
+                }
+            }
+        }
+        return list;
     }
 }

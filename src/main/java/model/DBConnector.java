@@ -180,6 +180,12 @@ public class DBConnector {
 
     public lesson getLesson(String teacherId, String subj, String les, int gr) {
         lesson res = dataBase.getLesson(teacherId, subj, les, gr);
+        HashMap<String, lesson.lessonNode> lessonNodes = res.getResults();
+        for(Map.Entry<String,lesson.lessonNode> l : lessonNodes.entrySet()){
+            if(l.getKey() == null){
+                lessonNodes.remove(l.getKey());
+            }
+        }
         return res;
     }
 
@@ -246,5 +252,16 @@ public class DBConnector {
     public void removeWorker(String workerId, String[] uri) {
         Worker w = this.getWorker(workerId);
         dataBase.removeWorker(w);
+    }
+
+    public void addWorker(String sName, String sSurname, String[] uri){
+        if(uri[3].equals("add_student")){
+            Student student = new Student(null,sName,sSurname);
+            student.setUn("st" + dataBase.getNextId(student));
+            student.setGroup(Integer.parseInt(uri[2].substring(2)));
+            ArrayList<String> loginPas = dataBase.addWorker(student);
+            sameFields.put("username",loginPas.get(0));
+            sameFields.put("password",loginPas.get(1));
+        }
     }
 }

@@ -84,6 +84,12 @@ public class MainServlet extends HttpServlet {
         String uri = req.getRequestURI();
         Worker w = connector.getWorker(session.getAttribute("name"));
 
+        if(w == null){
+            out.println("<h1>Your account doesn't exist. Please login another.</h1>");
+            req.getSession().invalidate();
+            return;
+        }
+
         boolean isStudent = w instanceof Student;
         boolean isTeacher = w instanceof Teacher;
         boolean isAdmin = w instanceof Admin;
@@ -114,6 +120,12 @@ public class MainServlet extends HttpServlet {
                 if(str[3].equals("remove_student")){
                     String s = req.getParameter("StudentName");
                     connector.removeWorker(s,str);
+                    String path = req.getContextPath() + "/jsp/admin_main.jsp";
+                    resp.sendRedirect(path);
+                }else if(str[3].equals("add_student")){
+                    String sName = req.getParameter("StudentName");
+                    String sSurname = req.getParameter("StudentSurName");
+                    connector.addWorker(sName, sSurname,str);
                     String path = req.getContextPath() + "/jsp/admin_main.jsp";
                     resp.sendRedirect(path);
                 }
@@ -162,6 +174,7 @@ public class MainServlet extends HttpServlet {
             int mark = entry.getValue().getMark();
             String strMark = mark <= 1 ? "":Integer.toString(mark);
             String strCom = entry.getValue().getComment();
+            strCom = strCom== null ? "":strCom;
             strCom = strCom == null ? "":strCom;
             out.println("<tr>\n <td><a href=\"\">" + connector.getFullName(entry.getKey()) + "</a></td>\n <td>" + strMark + "</td>\n <td>" + strCom + "</td>\n" +
                     "</tr>");
@@ -202,7 +215,9 @@ public class MainServlet extends HttpServlet {
             for (int i = 0; i < size; i++) {
                 int mrk = mark.get(i);
                 String markAsString = mrk <= 1 ? "" : Integer.toString(mrk);
-                out.print("<tr>\n <td>" + lessonName.get(i) + "</td>\n <td>" + lessonDate.get(i) + "</td>\n <td>" + markAsString + "</td>\n<td>" + comment.get(i) +
+                String comm = comment.get(i);
+                comm = comm == null ? "": comm;
+                out.print("<tr>\n <td>" + lessonName.get(i) + "</td>\n <td>" + lessonDate.get(i) + "</td>\n <td>" + markAsString + "</td>\n<td>" + comm +
                         "</td>\n" + "</tr>");
             }
             counter++;

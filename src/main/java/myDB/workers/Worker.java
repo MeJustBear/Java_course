@@ -15,4 +15,7 @@ abstract public class Worker implements WorkerInterface {
         return un;
     }
 
+    public void setUn(String un) {
+        this.un = un;
+    }
 }

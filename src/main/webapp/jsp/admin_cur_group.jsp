@@ -39,6 +39,7 @@
     <h2>Schedule of Group <%= connector.getSameFields().get("group")%></h2>
 </div>
 <div>
+
     <ul id="mainList">
     <%
         HashMap<String,String> fields = connector.getSameFields();
@@ -46,7 +47,7 @@
         fields.remove("group");
         Group gr = connector.getGroup(Integer.parseInt(gId));
         for(Student st : gr.getList()){%>
-            <li class="studentList"> <%= st.getName() + st.getSurname() + " | id :" + st.getUn() %> </li>
+            <li class="studentList"> <%= st.getName() + " " + st.getSurname() + " | id :" + st.getUn() %> </li>
         <%}%>
     </ul>
 </div>
@@ -59,22 +60,14 @@
 
 <div id="zatemnenieAddLesson">
     <div id="oknoAdd" class="modal animate">
-        <form action="/schedule/" name="Change" method="post">
+        <form action="${pageContext.request.contextPath}/schedule/<%="gr"+ gr.getGroupId()%>/add_student/" name="add" method="get">
             <div class="container">
-                <label for="subject"><b>Subject</b></label>
-                <select id="subject" name="Subject" required="required">
-                    <option value="">Chose subject</option>
-                    <option value="Subject 1">Subject 1</option>
-                    <option value="Subject 2">Subject 2</option>
-                </select>
+                <label for="studentName"><b>Student Name<br></b></label>
+                <input type="text" id="studentName"  name="StudentName" placeholder="Enter student name" required>
             </div>
             <div class="container">
-                <label for="date"><b>Date</b></label>
-                <input type="date" id="date" name="trip-start" required>
-            </div>
-            <div class="container">
-                <label for="lessonName"><b>Lesson Name<br></b></label>
-                <textarea id="lessonName" type="text" name="LessonName" placeholder="Enter Lesson Name" required></textarea>
+                <label for="studentSurName"><b>Student Surname<br></b></label>
+                <input type="text" id="studentSurName"  name="StudentSurName" placeholder="Enter student surname" required>
             </div>
             <div class="container">
                 <button type="submit">Submit</button>
@@ -93,7 +86,7 @@
                     <option value="">Chose student</option>
                     <%
                         for(Student st : gr.getList()){%>
-                            <option id="<%= st.getUn()%>" value="<%= st.getUn()%>"><%=st.getName() + " " +  st.getSurname()%></option>
+                            <option id="<%=st.getUn()%>" value="<%=st.getUn()%>"><%=st.getName() + " " +  st.getSurname()%></option>
                     <%}%>
                 </select>
             </div>

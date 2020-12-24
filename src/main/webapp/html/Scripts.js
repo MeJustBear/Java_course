@@ -19,3 +19,5 @@ function hide_button() {
             but.style.display = "block";
         }
 }
+
+function hello(message) {alert(message);}

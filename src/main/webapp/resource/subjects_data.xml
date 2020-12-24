@@ -90,6 +90,16 @@
 <Mark>5</Mark>
 <Comment>Good work</Comment>
 </Student>
+<Student>
+<Name>st4</Name>
+<Mark>0</Mark>
+<Comment></Comment>
+</Student>
+<Student>
+<Name>st5</Name>
+<Mark>0</Mark>
+<Comment></Comment>
+</Student>
 </Students>
 </Lesson>
 <Lesson>
@@ -101,16 +111,36 @@
 <Mark>4</Mark>
 <Comment></Comment>
 </Student>
+<Student>
+<Name>st4</Name>
+<Mark>5</Mark>
+<Comment>Good answers</Comment>
+</Student>
+<Student>
+<Name>st5</Name>
+<Mark>0</Mark>
+<Comment></Comment>
+</Student>
 </Students>
 </Lesson>
 <Lesson>
-<Name> Life and Something</Name>
-<Date> 10.12.2020</Date>
+<Name> Life and something</Name>
+<Date> 11.12.2020</Date>
 <Students>
 <Student>
 <Name>st2</Name>
+<Mark>3</Mark>
+<Comment></Comment>
+</Student>
+<Student>
+<Name>st4</Name>
+<Mark>4</Mark>
+<Comment></Comment>
+</Student>
+<Student>
+<Name>st5</Name>
 <Mark>5</Mark>
-<Comment>Pretty good work</Comment>
+<Comment></Comment>
 </Student>
 </Students>
 </Lesson>

@@ -21,7 +21,16 @@
     <meta charset="UTF-8">
     <title>Schedule</title>
 </head>
-<body>
+<%
+    HashMap<String,String> fields = connector.getSameFields();
+    if(fields.get("username") != null){%>
+    <body onLoad="hello('Login: ' + <%=fields.get("username")%> + '\nPassword: ' + <%=fields.get("password")%>)">
+    <%
+        fields.remove("username");
+        fields.remove("password");
+    }else{%>
+       <body>
+    <%}%>
 <%
     String atName = (String) session.getAttribute("name");
     if (atName == null) {
@@ -32,6 +41,7 @@
         return;
     }
 %>
+
 <script src="../html/Scripts.js" defer></script>
 <div class="header">
     <h1 style="display: inline; align-content: center">Online schedule</h1>
