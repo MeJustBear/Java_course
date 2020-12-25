@@ -219,10 +219,11 @@ public class DBConnector {
         LocalDate localDate = LocalDate.parse(date, formatter);
         str = uri.split("/");
         int groupId = Integer.parseInt(str[2].substring(2));
+        Group gr = getGroup(groupId);
         ArrayList<dataNode> dataNodes = dataBase.getNodes();
         for (dataNode dn : dataNodes) {
             if (dn.getSubjectName().equals(subject) && dn.getGroupId() == groupId) {
-                dn.pushBackLesson(subjName, localDate);
+                dn.pushBackLesson(subjName, localDate,gr);
                 return;
             }
         }
@@ -255,6 +256,13 @@ public class DBConnector {
     }
 
     public void addWorker(String sName, String sSurname, String[] uri){
+        if(uri[2].equals("add_teacher")){
+            Teacher teacher = new Teacher(null,sName,sSurname);
+            teacher.setUn("te" + dataBase.getNextId(teacher));
+            ArrayList<String> loginPas = dataBase.addWorker(teacher);
+            sameFields.put("username",loginPas.get(0));
+            sameFields.put("password",loginPas.get(1));
+        }else
         if(uri[3].equals("add_student")){
             Student student = new Student(null,sName,sSurname);
             student.setUn("st" + dataBase.getNextId(student));
@@ -262,6 +270,51 @@ public class DBConnector {
             ArrayList<String> loginPas = dataBase.addWorker(student);
             sameFields.put("username",loginPas.get(0));
             sameFields.put("password",loginPas.get(1));
+        }
+    }
+
+    public int getCurGroupId(){
+        HashMap<Integer, Group> gMap = dataBase.getGroups();
+        int max = 0;
+        for(Map.Entry<Integer,Group> gr : gMap.entrySet()){
+            if(max < gr.getKey()){
+                max = gr.getKey();
+            }
+        }
+        return max + 1;
+    }
+
+    public void addGroup(int groupId) {
+        HashMap<Integer,Group> groupHashMap = dataBase.getGroups();
+        groupHashMap.put(groupId,new Group(groupId));
+    }
+
+    public void removeGroup(int groupId) {
+        Group gr = dataBase.getGroup(groupId);
+        dataBase.removeGroup(gr);
+    }
+
+
+    public void addSubject(Group gr, Worker w, String subjName) {
+        Teacher teacher = (Teacher) w;
+        teacher.addSubject(subjName);
+        dataBase.addSubject(teacher,subjName,gr);
+    }
+
+    public void removeSubject(Worker worker, String subjectName) {
+        Teacher teacher = (Teacher) worker;
+        teacher.removeSubject(subjectName);
+        if(worker == null || subjectName == null){
+            return;
+        }
+        List<dataNode> dataNodes = dataBase.getNodes();
+        for(int i = 0; i < dataNodes.size(); i++){
+            String nodeSubjectName = dataNodes.get(i).getSubjectName();
+            String teacherUn = dataNodes.get(i).getTeacherId();
+            if( nodeSubjectName.equals(subjectName) && teacherUn.equals(teacher.getUn())){
+                dataNodes.remove(i);
+                return;
+            }
         }
     }
 }

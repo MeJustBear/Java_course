@@ -37,20 +37,38 @@ public class myDataBase {
 
     }
 
-    public int getNextId(Worker w){
-        if(w instanceof Student) {
+    public int getNextId(Worker w) {
+        if (w instanceof Student) {
             List<Worker> workerList = workers.get("Student");
-            return workerList.size() + 1;
+            int max = 0;
+            for(Worker worker : workerList){
+                int cur = Integer.parseInt(worker.getUn().substring(2));
+                if(max < cur ){
+                    max = cur;
+                }
+            }
+            return max + 1;
+        }
+        if (w instanceof Teacher) {
+            List<Worker> workerList = workers.get("Teacher");
+            int max = 0;
+            for(Worker worker : workerList){
+                int cur = Integer.parseInt(worker.getUn().substring(2));
+                if(max < cur ){
+                    max = cur;
+                }
+            }
+            return max + 1;
         }
         return 0;
     }
 
-    public void removeWorker(Worker curWorker){
-        if(curWorker instanceof Student){
+    public void removeWorker(Worker curWorker) {
+        if (curWorker instanceof Student) {
             Student student = (Student) curWorker;
-            for(dataNode dn : dataNodes){
-                if(dn.getGroupId() == student.getGroup()){
-                    for(lesson l : dn.getLessons()){
+            for (dataNode dn : dataNodes) {
+                if (dn.getGroupId() == student.getGroup()) {
+                    for (lesson l : dn.getLessons()) {
                         l.removeStudent(student);
                         break;
                     }
@@ -59,24 +77,40 @@ public class myDataBase {
             Group stGroup = groups.get(student.getGroup());
             stGroup.removeStudent(student);
             List<Worker> workerList = workers.get("Student");
-            for(int i =0; i < workerList.size(); i++){
-                if(workerList.get(i).getUn().equals(student.getUn())){
+            for (int i = 0; i < workerList.size(); i++) {
+                if (workerList.get(i).getUn().equals(student.getUn())) {
                     workerList.remove(i);
                     break;
                 }
             }
             pwdBase.remove(student.getUn());
+            return;
         }
-
-
+        if(curWorker instanceof Teacher){
+            Teacher teacher = (Teacher) curWorker;
+            for(int i = 0; i < dataNodes.size(); i++){
+                if(dataNodes.get(i).getTeacherId().equals(teacher.getUn())){
+                    dataNodes.remove(i);
+                }
+            }
+            List<Worker> workerList = workers.get("Teacher");
+            for (int i = 0; i < workerList.size(); i++) {
+                if (workerList.get(i).getUn().equals(teacher.getUn())) {
+                    workerList.remove(i);
+                    break;
+                }
+            }
+            pwdBase.remove(teacher.getUn());
+            return;
+        }
     }
 
     private void setTeacherSubjects() {
-        for(Worker worker : workers.get("Teacher")){
+        for (Worker worker : workers.get("Teacher")) {
             Teacher teacher = (Teacher) worker;
             ArrayList<String> TeacherSubjects = new ArrayList<>();
-            for(dataNode dn : dataNodes){
-                if(dn.getTeacherId().equals(teacher.getUn())){
+            for (dataNode dn : dataNodes) {
+                if (dn.getTeacherId().equals(teacher.getUn())) {
                     TeacherSubjects.add(dn.getSubjectName());
                 }
             }
@@ -98,9 +132,9 @@ public class myDataBase {
 
     private void saveGroups(String path) throws IOException {
         PrintStream printStream = new PrintStream(path);
-        for(Map.Entry<Integer,Group> entry : groups.entrySet()){
+        for (Map.Entry<Integer, Group> entry : groups.entrySet()) {
             printStream.print(entry.getKey().toString() + " ");
-            for(Student st : entry.getValue().getList()){
+            for (Student st : entry.getValue().getList()) {
                 String s = new String(entry.getKey().toString() + " " + st.getName() + " " + st.getSurname());
                 printStream.print(st.getUn() + " ");
             }
@@ -112,9 +146,9 @@ public class myDataBase {
     private void saveNames(String path) throws IOException {
         FileWriter fileWriter = new FileWriter(path);
         PrintWriter printWriter = new PrintWriter(fileWriter);
-        for(Map.Entry<String,List<Worker>> entry : workers.entrySet()){
+        for (Map.Entry<String, List<Worker>> entry : workers.entrySet()) {
             List<Worker> curWorkers = entry.getValue();
-            for(Worker w : curWorkers){
+            for (Worker w : curWorkers) {
                 printWriter.println(w.getUn() + " " + w.getName() + " " + w.getSurname());
             }
         }
@@ -125,19 +159,19 @@ public class myDataBase {
         FileWriter fileWriter = new FileWriter(mdsPath);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n <Data>");
-        for(dataNode dn : dataNodes){
+        for (dataNode dn : dataNodes) {
             printWriter.println("<Subject>");
             printWriter.println("<Name>" + dn.getSubjectName() + "</Name>\n<Teacher>" + dn.getTeacherId() + "</Teacher>\n<Group>" + dn.getGroupId() + "</Group>\n<Lessons>");
             ArrayList<lesson> lessons = dn.getLessons();
-            for(lesson l : lessons){
+            for (lesson l : lessons) {
                 printWriter.println("<Lesson>\n<Name> " + l.getName() + "</Name>\n<Date> " + l.getLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) +
                         "</Date>\n<Students>");
                 HashMap<String, lesson.lessonNode> lessonMap = l.getResults();
-                for(Map.Entry<String,lesson.lessonNode> curStud : lessonMap.entrySet()){
-                    if(curStud.getKey() == null)
+                for (Map.Entry<String, lesson.lessonNode> curStud : lessonMap.entrySet()) {
+                    if (curStud.getKey() == null)
                         continue;
                     String comment = curStud.getValue().getComment();
-                    if(comment == null)
+                    if (comment == null)
                         comment = "";
                     printWriter.println("<Student>\n<Name>" + curStud.getKey() + "</Name>\n<Mark>" + curStud.getValue().getMark() +
                             "</Mark>\n<Comment>" + curStud.getValue().getComment()
@@ -154,13 +188,13 @@ public class myDataBase {
     private void savePasswords(String path) throws IOException {
         FileWriter fileWriter = new FileWriter(path);
         PrintWriter printWriter = new PrintWriter(fileWriter);
-        for(Map.Entry<String,String> map : pwdBase.entrySet()){
+        for (Map.Entry<String, String> map : pwdBase.entrySet()) {
             printWriter.println(map.getKey() + " " + map.getValue());
         }
         printWriter.close();
     }
 
-    public Group getGroup(int groupId){
+    public Group getGroup(int groupId) {
         return groups.get(groupId);
     }
 
@@ -168,16 +202,20 @@ public class myDataBase {
         return dataNodes;
     }
 
-    public boolean findPas(String name, String password){
-        if(pwdBase.get(name).equals(password)){
-            return true;
-        }else{
+    public boolean findPas(String name, String password) {
+        try {
+            if (pwdBase.get(name).equals(password)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e){
             return false;
         }
     }
 
     private void readMDS(String mdsPath) throws IOException, ParserConfigurationException, SAXException {
-        dataNodes = parser.parseXML(mdsPath,format);
+        dataNodes = parser.parseXML(mdsPath, format);
     }
 
 
@@ -243,10 +281,10 @@ public class myDataBase {
     }
 
     public lesson getLesson(String teacherId, String subj, String les, int gr) {
-        for(dataNode dn : dataNodes){
-            if(dn.getSubjectName().equals(subj) && dn.getTeacherId().equals(teacherId) && dn.getGroupId() == gr){
-                for(lesson l : dn.getLessons()){
-                    if(l.getName().equals(les)){
+        for (dataNode dn : dataNodes) {
+            if (dn.getSubjectName().equals(subj) && dn.getTeacherId().equals(teacherId) && dn.getGroupId() == gr) {
+                for (lesson l : dn.getLessons()) {
+                    if (l.getName().equals(les)) {
                         return l;
                     }
                 }
@@ -256,12 +294,12 @@ public class myDataBase {
     }
 
     public HashMap<Integer, Group> getGroups() {
-        return  groups;
+        return groups;
     }
 
     public ArrayList<String> addWorker(Worker worker) {
         ArrayList<String> list = new ArrayList<>();
-        if(worker instanceof Student){
+        if (worker instanceof Student) {
             Student student = (Student) worker;
             int leftLimit = 48; // numeral '0'
             int rightLimit = 122; // letter 'z'
@@ -273,20 +311,70 @@ public class myDataBase {
                     .limit(targetStringLength)
                     .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                     .toString();
-            pwdBase.put(worker.getUn(),password);
+            pwdBase.put(worker.getUn(), password);
 
             list.add(worker.getUn());
             list.add(password);
             workers.get("Student").add(worker);
             groups.get((student.getGroup())).addStudent(student);
-            for(dataNode dn : dataNodes){
-                if(dn.getGroupId() == student.getGroup()){
-                    for(lesson l : dn.getLessons()){
-                        l.addNodeToMap(student.getUn(),0,new String(""));
+            for (dataNode dn : dataNodes) {
+                if (dn.getGroupId() == student.getGroup()) {
+                    for (lesson l : dn.getLessons()) {
+                        l.addNodeToMap(student.getUn(), 0, new String(""));
                     }
                 }
             }
+        }else if( worker instanceof Teacher){
+            Teacher teacher = (Teacher)  worker;
+            int leftLimit = 48; // numeral '0'
+            int rightLimit = 122; // letter 'z'
+            int targetStringLength = 4;
+            Random random = new Random();
+
+            String password = random.ints(leftLimit, rightLimit + 1)
+                    .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                    .limit(targetStringLength)
+                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                    .toString();
+            pwdBase.put(worker.getUn(), password);
+
+            list.add(worker.getUn());
+            list.add(password);
+            workers.get("Teacher").add(worker);
         }
         return list;
+    }
+
+    public void removeGroup(Group gr) {
+        for(int i = 0; i < dataNodes.size(); i++){
+            if(dataNodes.get(i).getGroupId() == gr.getGroupId()){
+                dataNodes.remove(i);
+            }
+        }
+        groups.remove(gr.getGroupId());
+        List<Worker> studs = workers.get("Student");
+        for(int i = 0; i < studs.size(); i++){
+            Student st = (Student) studs.get(i);
+            if( st.getGroup() == gr.getGroupId()){
+                pwdBase.remove(st.getUn());
+                studs.remove(i);
+            }
+        }
+    }
+
+    public void addSubject(Teacher teacher,String subjName,Group gr){
+        for(dataNode dn : dataNodes){
+            if(dn.getSubjectName().equals(subjName) && dn.getGroupId() == gr.getGroupId()){
+                List<Worker> workerList = workers.get("Teacher");
+                String curTeachId = dn.getTeacherId();
+                for(Worker w : workerList){
+                    Teacher t = (Teacher) w;
+                    t.removeSubject(subjName);
+                }
+                dn.setTeacherId(teacher.getUn());
+                return;
+            }
+        }
+        dataNodes.add(new dataNode(subjName,teacher.getUn(),gr.getGroupId(), new ArrayList<>()));
     }
 }

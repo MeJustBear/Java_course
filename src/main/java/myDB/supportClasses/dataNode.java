@@ -1,5 +1,7 @@
 package myDB.supportClasses;
 
+import myDB.workers.Student;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,13 +57,22 @@ public class dataNode {
         this.teacherId = teacherId;
     }
 
-    public void pushBackLesson(String subjName, LocalDate localDate) {
+    public void pushBackLesson(String subjName, LocalDate localDate,Group group) {
         HashMap<String, lesson.lessonNode> map = new HashMap<>();
-        Set<String> studNames = lessons.get(0).results.keySet();
-        for(String name : studNames){
-            map.put(name,new lesson().getEmptyNode());
+        lesson l = null;
+        if(lessons.size() != 0) {
+            Set<String> studNames = lessons.get(0).results.keySet();
+            for (String name : studNames) {
+                map.put(name, new lesson().getEmptyNode());
+            }
+
+            lessons.add(l);
+        }else{
+            for(Student st : group.getList()){
+                map.put(st.getUn(), new lesson().getEmptyNode());
+            }
         }
-        lesson l = new lesson(subjName,localDate);
+        l = new lesson(subjName, localDate);
         l.setResults(map);
         lessons.add(l);
     }

@@ -1,9 +1,9 @@
 te1 Maureen Garcia
 te2 Dixie Blake
-st1 Georgia Lopez
 st2 Paula Boone
 st3 Lindsay Gill
-st4 Dana Skylley
-st5 Jane Aire
+st4 Pola Cowsky
+st1 Rose Abott
+st6 Tara Kane
 ad1 Lila Cooper
 ad2 Tara Ramsey

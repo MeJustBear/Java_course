@@ -18,6 +18,14 @@ public class Teacher extends Worker{
         return subjects;
     }
 
+    public void addSubject(String sub){
+        subjects.add(sub);
+    }
+
+    public void removeSubject(String subj){
+        subjects.remove(subjects.indexOf(subj));
+    }
+
     @Override
     public String getName() {
         return super.name;

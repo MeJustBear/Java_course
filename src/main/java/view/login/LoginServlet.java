@@ -16,6 +16,19 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Cookie[] cookies = req.getCookies();
+        if (cookies != null) {
+            if (cookies.length > 0) {
+                if (cookies[0].getValue() != null) {
+                    if (!cookies[0].getValue().isEmpty()) {
+                        HttpSession session = req.getSession();
+                        session.setAttribute("name", cookies[0].getValue());
+                        String path = req.getContextPath() + "/schedule/";
+                        resp.sendRedirect(path);
+                    }
+                }
+            }
+        }
         req.getRequestDispatcher("/html/login/login_default.html").include(req, resp);
     }
 
@@ -26,10 +39,15 @@ public class LoginServlet extends HttpServlet {
         if (name != null && psw != null) {
             if (connector.checkUsernamePassword(name, psw)) {
                 HttpSession session = req.getSession();
-                Cookie cookie = new Cookie("name",name);
+                Cookie cookie = new Cookie("name", name);
+                cookie.setPath("/");
+                cookie.setMaxAge(5000);
                 resp.addCookie(cookie);
                 session.setAttribute("name", name);
                 String path = req.getContextPath() + "/schedule/";
+                resp.sendRedirect(path);
+            } else {
+                String path = req.getContextPath() + "/schedule/login/";
                 resp.sendRedirect(path);
             }
         }

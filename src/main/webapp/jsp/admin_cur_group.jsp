@@ -1,7 +1,11 @@
 <%@ page import="myDB.supportClasses.Group" %>
 <%@ page import="model.DBConnector" %>
 <%@ page import="myDB.workers.Student" %>
-<%@ page import="java.util.HashMap" %><%--
+<%@ page import="java.util.HashMap" %>
+<%@ page import="model.Subject" %>
+<%@ page import="java.util.TreeSet" %>
+<%@ page import="java.util.Set" %>
+<%@ page import="java.util.Map" %><%--
   Created by IntelliJ IDEA.
   User: pavel
   Date: 24.12.2020
@@ -12,7 +16,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/ico" href="../html/favicon.ico" />
+    <link rel="icon" type="image/ico" href="../html/favicon.ico"/>
     <link rel="stylesheet" type="text/css" href="../html/mainStyle.css"/>
     <meta charset="UTF-8">
     <title>Schedule</title>
@@ -36,19 +40,44 @@
           action="${pageContext.request.contextPath}/schedule/logout/">
         <input type="submit" value="logout">
     </form>
-    <h2>Schedule of Group <%= connector.getSameFields().get("group")%></h2>
+    <h2>Schedule of Group <%= connector.getSameFields().get("group")%>
+    </h2>
 </div>
 <div>
 
     <ul id="mainList">
-    <%
-        HashMap<String,String> fields = connector.getSameFields();
-        String gId = fields.get("group");
-        fields.remove("group");
-        Group gr = connector.getGroup(Integer.parseInt(gId));
-        for(Student st : gr.getList()){%>
-            <li class="studentList"> <%= st.getName() + " " + st.getSurname() + " | id :" + st.getUn() %> </li>
-        <%}%>
+        <%
+            HashMap<String, String> fields = connector.getSameFields();
+            String gId = fields.get("group");
+            fields.remove("group");
+            Group gr = connector.getGroup(Integer.parseInt(gId));
+            Student label = null;
+            for (Student st : gr.getList()) {%>
+        <li class="studentList"><%= st.getName() + " " + st.getSurname() + " | id :" + st.getUn() %>
+        </li>
+        <%
+                label = st;
+            }
+        %>
+    </ul>
+</div>
+
+<%
+
+
+%>
+<div>
+    <ul id="mainList2">
+        <%
+            HashMap<String, Subject> subjectHashMap = null;
+            if (label != null) {
+                subjectHashMap =connector.getSubjects(label.getUn());
+            }
+            if(subjectHashMap != null)
+            for (Map.Entry<String, Subject> m : subjectHashMap.entrySet()) {
+                if(m.getValue() != null && m.getKey() != null){%>
+                <li class="subject" ><%=m.getKey()%> | Lecturer: <%=m.getValue().getTeacherName()%></li>
+        <%}}%>
     </ul>
 </div>
 
@@ -60,14 +89,16 @@
 
 <div id="zatemnenieAddLesson">
     <div id="oknoAdd" class="modal animate">
-        <form action="${pageContext.request.contextPath}/schedule/<%="gr"+ gr.getGroupId()%>/add_student/" name="add" method="get">
+        <form action="${pageContext.request.contextPath}/schedule/<%="gr"+ gr.getGroupId()%>/add_student/" name="add"
+              method="get">
             <div class="container">
                 <label for="studentName"><b>Student Name<br></b></label>
-                <input type="text" id="studentName"  name="StudentName" placeholder="Enter student name" required>
+                <input type="text" id="studentName" name="StudentName" placeholder="Enter student name" required>
             </div>
             <div class="container">
                 <label for="studentSurName"><b>Student Surname<br></b></label>
-                <input type="text" id="studentSurName"  name="StudentSurName" placeholder="Enter student surname" required>
+                <input type="text" id="studentSurName" name="StudentSurName" placeholder="Enter student surname"
+                       required>
             </div>
             <div class="container">
                 <button type="submit">Submit</button>
@@ -79,14 +110,16 @@
 
 <div id="zatemnenieRemoveLesson">
     <div id="oknoRemove" class="modal animate">
-        <form action="${pageContext.request.contextPath}/schedule/<%="gr"+ gr.getGroupId()%>/remove_student/" name="rmv" method="get">
+        <form action="${pageContext.request.contextPath}/schedule/<%="gr"+ gr.getGroupId()%>/remove_student/" name="rmv"
+              method="get">
             <div class="container">
                 <label for="studentName"><b>Student Name</b></label>
                 <select id="studentName" name="StudentName" required="required">
                     <option value="">Chose student</option>
                     <%
-                        for(Student st : gr.getList()){%>
-                            <option id="<%=st.getUn()%>" value="<%=st.getUn()%>"><%=st.getName() + " " +  st.getSurname()%></option>
+                        for (Student st : gr.getList()) {%>
+                    <option id="<%=st.getUn()%>" value="<%=st.getUn()%>"><%=st.getName() + " " + st.getSurname()%>
+                    </option>
                     <%}%>
                 </select>
             </div>
