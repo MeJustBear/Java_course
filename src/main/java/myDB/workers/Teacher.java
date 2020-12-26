@@ -1,6 +1,7 @@
 package myDB.workers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Teacher extends Worker{
 
@@ -15,7 +16,8 @@ public class Teacher extends Worker{
     }
 
     public ArrayList<String> getSubjects() {
-        return subjects;
+        HashSet<String> res = new HashSet<>(subjects);
+        return new ArrayList<>(res);
     }
 
     public void addSubject(String sub){

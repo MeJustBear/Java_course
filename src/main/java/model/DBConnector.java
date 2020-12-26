@@ -29,10 +29,27 @@ public class DBConnector {
         }
     }
 
+    private DBConnector(String pwdPath, String namesPath, String groupsPath, String mdsPath) {
+        try {
+            dataBase = new myDataBase(pwdPath, namesPath, groupsPath, mdsPath);
+            sameFields = new HashMap<>();
+        } catch (IOException | ParserConfigurationException | SAXException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static DBConnector getInstance() {
 
         if (instance == null) {
             instance = new DBConnector();
+        }
+        return instance;
+    }
+
+    public static DBConnector getInstanceWithParameters(String pwdPath, String namesPath, String groupsPath, String mdsPath) {
+
+        if (instance == null) {
+            instance = new DBConnector(pwdPath, namesPath, groupsPath, mdsPath);
         }
         return instance;
     }
@@ -181,8 +198,8 @@ public class DBConnector {
     public lesson getLesson(String teacherId, String subj, String les, int gr) {
         lesson res = dataBase.getLesson(teacherId, subj, les, gr);
         HashMap<String, lesson.lessonNode> lessonNodes = res.getResults();
-        for(Map.Entry<String,lesson.lessonNode> l : lessonNodes.entrySet()){
-            if(l.getKey() == null){
+        for (Map.Entry<String, lesson.lessonNode> l : lessonNodes.entrySet()) {
+            if (l.getKey() == null) {
                 lessonNodes.remove(l.getKey());
             }
         }
@@ -223,7 +240,7 @@ public class DBConnector {
         ArrayList<dataNode> dataNodes = dataBase.getNodes();
         for (dataNode dn : dataNodes) {
             if (dn.getSubjectName().equals(subject) && dn.getGroupId() == groupId) {
-                dn.pushBackLesson(subjName, localDate,gr);
+                dn.pushBackLesson(subjName, localDate, gr);
                 return;
             }
         }
@@ -252,32 +269,46 @@ public class DBConnector {
 
     public void removeWorker(String workerId, String[] uri) {
         Worker w = this.getWorker(workerId);
+        if (w instanceof Student) {
+            sameFields.put("group", Integer.toString(((Student) w).getGroup()));
+        }
         dataBase.removeWorker(w);
     }
 
-    public void addWorker(String sName, String sSurname, String[] uri){
-        if(uri[2].equals("add_teacher")){
-            Teacher teacher = new Teacher(null,sName,sSurname);
+    public void addWorker(String sName, String sSurname, String[] uri) {
+        boolean allLettersName = sName.chars().allMatch(Character::isLetter);
+        boolean allLettersSurname = sSurname.chars().allMatch(Character::isLetter);
+        if (uri[2].equals("add_teacher") && !allLettersName && !allLettersSurname) {
+            return;
+        } else if (uri.length > 3) {
+            if (uri[3].equals("add_student") && !allLettersName && !allLettersSurname) {
+                int group = Integer.parseInt(uri[2].substring(2));
+                sameFields.put("group", Integer.toString(group));
+                return;
+            }
+        }
+        if (uri[2].equals("add_teacher")) {
+            Teacher teacher = new Teacher(null, sName, sSurname);
             teacher.setUn("te" + dataBase.getNextId(teacher));
             ArrayList<String> loginPas = dataBase.addWorker(teacher);
-            sameFields.put("username",loginPas.get(0));
-            sameFields.put("password",loginPas.get(1));
-        }else
-        if(uri[3].equals("add_student")){
-            Student student = new Student(null,sName,sSurname);
+            sameFields.put("username", loginPas.get(0));
+            sameFields.put("password", loginPas.get(1));
+        } else if (uri[3].equals("add_student")) {
+            Student student = new Student(null, sName, sSurname);
             student.setUn("st" + dataBase.getNextId(student));
             student.setGroup(Integer.parseInt(uri[2].substring(2)));
             ArrayList<String> loginPas = dataBase.addWorker(student);
-            sameFields.put("username",loginPas.get(0));
-            sameFields.put("password",loginPas.get(1));
+            sameFields.put("username", loginPas.get(0));
+            sameFields.put("password", loginPas.get(1));
+            sameFields.put("group", Integer.toString(student.getGroup()));
         }
     }
 
-    public int getCurGroupId(){
+    public int getCurGroupId() {
         HashMap<Integer, Group> gMap = dataBase.getGroups();
         int max = 0;
-        for(Map.Entry<Integer,Group> gr : gMap.entrySet()){
-            if(max < gr.getKey()){
+        for (Map.Entry<Integer, Group> gr : gMap.entrySet()) {
+            if (max < gr.getKey()) {
                 max = gr.getKey();
             }
         }
@@ -285,8 +316,8 @@ public class DBConnector {
     }
 
     public void addGroup(int groupId) {
-        HashMap<Integer,Group> groupHashMap = dataBase.getGroups();
-        groupHashMap.put(groupId,new Group(groupId));
+        HashMap<Integer, Group> groupHashMap = dataBase.getGroups();
+        groupHashMap.put(groupId, new Group(groupId));
     }
 
     public void removeGroup(int groupId) {
@@ -296,25 +327,33 @@ public class DBConnector {
 
 
     public void addSubject(Group gr, Worker w, String subjName) {
+        boolean allLettersSubj = subjName.chars().allMatch(Character::isLetter);
+        if (!allLettersSubj)
+            return;
         Teacher teacher = (Teacher) w;
         teacher.addSubject(subjName);
-        dataBase.addSubject(teacher,subjName,gr);
+        dataBase.addSubject(teacher, subjName, gr);
     }
 
     public void removeSubject(Worker worker, String subjectName) {
         Teacher teacher = (Teacher) worker;
         teacher.removeSubject(subjectName);
-        if(worker == null || subjectName == null){
+        if (worker == null || subjectName == null) {
             return;
         }
         List<dataNode> dataNodes = dataBase.getNodes();
-        for(int i = 0; i < dataNodes.size(); i++){
+        for (int i = 0; i < dataNodes.size(); i++) {
             String nodeSubjectName = dataNodes.get(i).getSubjectName();
             String teacherUn = dataNodes.get(i).getTeacherId();
-            if( nodeSubjectName.equals(subjectName) && teacherUn.equals(teacher.getUn())){
+            if (nodeSubjectName.equals(subjectName) && teacherUn.equals(teacher.getUn())) {
                 dataNodes.remove(i);
                 return;
             }
         }
     }
+
+    public myDataBase getDBLink() {
+        return dataBase;
+    }
+
 }

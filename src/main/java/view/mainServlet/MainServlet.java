@@ -94,6 +94,12 @@ public class MainServlet extends HttpServlet {
         boolean isAdmin = w instanceof Admin;
 
         if (isStudent) {
+            if (uri.startsWith("/schedule/graphic/")) {
+                String[] str = uri.split("/");
+                connector.getSameFields().put("group",str[3]);
+                String path = req.getContextPath() + "/jsp/graphics.jsp";
+                resp.sendRedirect(path);
+            }
             req.getRequestDispatcher("/html/routine/main_routine.html").include(req, resp);
             out.println("<h2>" + w.getName() + " " + w.getSurname() + " | Student</h2>");
             drawStudentHood(out, w, session);
@@ -150,7 +156,7 @@ public class MainServlet extends HttpServlet {
                 Worker teacher = connector.getWorker(teacheName);
                 String subjName = req.getParameter("SubjectName");
                 connector.addSubject(gr, teacher, subjName);
-            }else if (uri.startsWith("/schedule/remove_subject/")) {
+            } else if (uri.startsWith("/schedule/remove_subject/")) {
                 String teacherUn = req.getParameter("teacherUn");
                 String subjectName = req.getParameter("subjectName");
                 Worker teacher = connector.getWorker(teacherUn);
@@ -199,7 +205,7 @@ public class MainServlet extends HttpServlet {
             String strMark = mark <= 1 ? "" : Integer.toString(mark);
             String strCom = entry.getValue().getComment();
             strCom = strCom == null ? "" : strCom;
-            strCom = strCom == null ? "" : strCom;
+//            strCom = strCom == null ? "" : strCom;
             out.println("<tr>\n <td><a href=\"\">" + connector.getFullName(entry.getKey()) + "</a></td>\n <td>" + strMark + "</td>\n <td>" + strCom + "</td>\n" +
                     "</tr>");
         }
@@ -247,6 +253,27 @@ public class MainServlet extends HttpServlet {
             counter++;
             out.print("</table></ul></div>");
         }
+        out.print("<div><button class=\"AddLessonButton\"><a href=\"#zatemnenieRemoveLesson\">Show graphics</a></button></div>");
+        out.print("<div id=\"zatemnenieRemoveLesson\">\n" +
+                "    <div id=\"oknoRemove\" class=\"modal animate\">\n" +
+                "        <form action=\"/schedule/graphic/" + ((Student) w).getGroup() + "/\" name=\"graph\"\n" + "method=\"get\">\n" +
+                "            <div class=\"container\">\n" +
+                "                <label for=\"subjectName\"><b>Student Name</b></label>\n" +
+                "                <select id=\"subjectName\" name=\"SubjectName\" required=\"required\">\n" +
+                "                    <option value=\"\">Chose subject</option>\n");
+        for (Map.Entry<String, Subject> entry : data.entrySet()) {
+            out.print("<option id=\"" + entry.getKey() + "\" value=\"" + entry.getKey() + "\">" + entry.getKey() + "</option>\n");
+        }
+
+        out.print("                </select>\n" +
+                "            </div>\n" +
+                "            <div class=\"container\">\n" +
+                "                <button type=\"submit\">Submit</button>\n" +
+                "            </div>\n" +
+                "        </form>\n" +
+                "        <button class=\"close\"><a href=\"#\">CLose</a></button>\n" +
+                "    </div>\n" +
+                "</div>");
     }
 
     private void drawSubjects(ArrayList<Subject> subjects, PrintWriter out, String uri) {

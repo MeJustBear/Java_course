@@ -1,6 +1,8 @@
 package myDB.workers;
 
-abstract public class Worker implements WorkerInterface {
+import java.util.ArrayList;
+
+abstract public class Worker extends ArrayList<Worker> implements WorkerInterface {
     protected String un;
     protected String name;
     protected String surname;

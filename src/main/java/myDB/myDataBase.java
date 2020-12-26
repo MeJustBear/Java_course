@@ -70,7 +70,6 @@ public class myDataBase {
                 if (dn.getGroupId() == student.getGroup()) {
                     for (lesson l : dn.getLessons()) {
                         l.removeStudent(student);
-                        break;
                     }
                 }
             }
@@ -348,7 +347,7 @@ public class myDataBase {
     public void removeGroup(Group gr) {
         for(int i = 0; i < dataNodes.size(); i++){
             if(dataNodes.get(i).getGroupId() == gr.getGroupId()){
-                dataNodes.remove(i);
+                dataNodes.remove(i--);
             }
         }
         groups.remove(gr.getGroupId());
@@ -357,12 +356,13 @@ public class myDataBase {
             Student st = (Student) studs.get(i);
             if( st.getGroup() == gr.getGroupId()){
                 pwdBase.remove(st.getUn());
-                studs.remove(i);
+                studs.remove(i--);
             }
         }
     }
 
     public void addSubject(Teacher teacher,String subjName,Group gr){
+
         for(dataNode dn : dataNodes){
             if(dn.getSubjectName().equals(subjName) && dn.getGroupId() == gr.getGroupId()){
                 List<Worker> workerList = workers.get("Teacher");
@@ -376,5 +376,19 @@ public class myDataBase {
             }
         }
         dataNodes.add(new dataNode(subjName,teacher.getUn(),gr.getGroupId(), new ArrayList<>()));
+    }
+
+    public myDataBase(String pwdPath, String namesPath, String groupsPath,String mdsPath) throws IOException, ParserConfigurationException, SAXException {
+        readPasswords(pwdPath);
+        readNames(namesPath);
+        readGroups(groupsPath);
+        readMDS(mdsPath);
+        setTeacherSubjects();
+
+    }
+
+
+    public HashMap<String, String> getPwdBase() {
+        return pwdBase;
     }
 }

@@ -11,7 +11,7 @@
 <Students>
 <Student>
 <Name>st1</Name>
-<Mark>4</Mark>
+<Mark>0</Mark>
 <Comment></Comment>
 </Student>
 <Student>
@@ -27,7 +27,7 @@
 <Students>
 <Student>
 <Name>st1</Name>
-<Mark>5</Mark>
+<Mark>0</Mark>
 <Comment></Comment>
 </Student>
 <Student>
@@ -38,17 +38,109 @@
 </Students>
 </Lesson>
 <Lesson>
-<Name> Les</Name>
-<Date> 10.12.2020</Date>
+<Name> That might the lesson</Name>
+<Date> 12.12.2020</Date>
 <Students>
 <Student>
 <Name>st1</Name>
+<Mark>0</Mark>
+<Comment></Comment>
+</Student>
+<Student>
+<Name>st3</Name>
 <Mark>5</Mark>
+<Comment></Comment>
+</Student>
+</Students>
+</Lesson>
+</Lessons></Subject>
+<Subject>
+<Name>Life Gardening</Name>
+<Teacher>te2</Teacher>
+<Group>1</Group>
+<Lessons>
+<Lesson>
+<Name> practice 1</Name>
+<Date> 01.01.2020</Date>
+<Students>
+<Student>
+<Name>st1</Name>
+<Mark>0</Mark>
+<Comment></Comment>
+</Student>
+<Student>
+<Name>st3</Name>
+<Mark>0</Mark>
+<Comment></Comment>
+</Student>
+</Students>
+</Lesson>
+<Lesson>
+<Name> practice 2</Name>
+<Date> 10.01.2020</Date>
+<Students>
+<Student>
+<Name>st1</Name>
+<Mark>0</Mark>
 <Comment></Comment>
 </Student>
 <Student>
 <Name>st3</Name>
 <Mark>3</Mark>
+<Comment></Comment>
+</Student>
+</Students>
+</Lesson>
+</Lessons></Subject>
+<Subject>
+<Name>Life Gardening</Name>
+<Teacher>te1</Teacher>
+<Group>2</Group>
+<Lessons>
+<Lesson>
+<Name> practice 1</Name>
+<Date> 01.01.2020</Date>
+<Students>
+<Student>
+<Name>st2</Name>
+<Mark>5</Mark>
+<Comment>Good work</Comment>
+</Student>
+<Student>
+<Name>st4</Name>
+<Mark>0</Mark>
+<Comment></Comment>
+</Student>
+</Students>
+</Lesson>
+<Lesson>
+<Name> practice 2</Name>
+<Date> 10.01.2020</Date>
+<Students>
+<Student>
+<Name>st2</Name>
+<Mark>4</Mark>
+<Comment></Comment>
+</Student>
+<Student>
+<Name>st4</Name>
+<Mark>0</Mark>
+<Comment></Comment>
+</Student>
+</Students>
+</Lesson>
+<Lesson>
+<Name> Life and something</Name>
+<Date> 11.12.2020</Date>
+<Students>
+<Student>
+<Name>st2</Name>
+<Mark>3</Mark>
+<Comment></Comment>
+</Student>
+<Student>
+<Name>st4</Name>
+<Mark>0</Mark>
 <Comment></Comment>
 </Student>
 </Students>
@@ -65,12 +157,12 @@
 <Students>
 <Student>
 <Name>st1</Name>
-<Mark>5</Mark>
+<Mark>0</Mark>
 <Comment></Comment>
 </Student>
 <Student>
 <Name>st3</Name>
-<Mark>4</Mark>
+<Mark>0</Mark>
 <Comment></Comment>
 </Student>
 </Students>
@@ -81,7 +173,7 @@
 <Students>
 <Student>
 <Name>st1</Name>
-<Mark>5</Mark>
+<Mark>0</Mark>
 <Comment></Comment>
 </Student>
 <Student>
@@ -111,32 +203,6 @@
 <Mark>5</Mark>
 <Comment></Comment>
 </Student>
-<Student>
-<Name>st6</Name>
-<Mark>0</Mark>
-<Comment></Comment>
-</Student>
-</Students>
-</Lesson>
-<Lesson>
-<Name> Lesson</Name>
-<Date> 22.12.2020</Date>
-<Students>
-<Student>
-<Name>st2</Name>
-<Mark>4</Mark>
-<Comment>qwertty</Comment>
-</Student>
-<Student>
-<Name>st4</Name>
-<Mark>0</Mark>
-<Comment>null</Comment>
-</Student>
-<Student>
-<Name>st6</Name>
-<Mark>0</Mark>
-<Comment>null</Comment>
-</Student>
 </Students>
 </Lesson>
 </Lessons></Subject>
@@ -145,26 +211,5 @@
 <Teacher>te2</Teacher>
 <Group>2</Group>
 <Lessons>
-<Lesson>
-<Name> Remote lesson</Name>
-<Date> 17.12.2020</Date>
-<Students>
-<Student>
-<Name>st2</Name>
-<Mark>5</Mark>
-<Comment></Comment>
-</Student>
-<Student>
-<Name>st4</Name>
-<Mark>0</Mark>
-<Comment>null</Comment>
-</Student>
-<Student>
-<Name>st6</Name>
-<Mark>0</Mark>
-<Comment>null</Comment>
-</Student>
-</Students>
-</Lesson>
 </Lessons></Subject>
 </Data>

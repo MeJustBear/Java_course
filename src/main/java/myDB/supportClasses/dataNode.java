@@ -65,8 +65,6 @@ public class dataNode {
             for (String name : studNames) {
                 map.put(name, new lesson().getEmptyNode());
             }
-
-            lessons.add(l);
         }else{
             for(Student st : group.getList()){
                 map.put(st.getUn(), new lesson().getEmptyNode());

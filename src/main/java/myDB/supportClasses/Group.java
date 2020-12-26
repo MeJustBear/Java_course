@@ -34,6 +34,15 @@ public class Group {
         list.add(st);
     }
 
+    public boolean contains(Student st){
+        for(Student student : list){
+            if(student.getUn().equals(st.getUn())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
