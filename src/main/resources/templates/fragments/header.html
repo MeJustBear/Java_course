@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Fragments</title>
+</head>
+<body>
+
+<div th:fragment="pageHead" th:remove="tag">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/mainStyle.css}">
+    <meta charset="UTF-8">
+    <title>Schedule</title>
+</div>
+
+<div th:fragment="topBar(roleLabel)" class="header">
+    <script th:src="@{/js/Scripts.js}" defer></script>
+    <h1 style="display: inline; align-content: center">Online schedule</h1>
+    <form style="display:inline; float: right" method="GET" th:action="@{/schedule/logout/}">
+        <input type="submit" value="logout">
+    </form>
+    <h2 th:text="${worker.fullName} + ' | ' + ${roleLabel}">Name | Role</h2>
+</div>
+
+</body>
+</html>

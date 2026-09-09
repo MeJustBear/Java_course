@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: pageHead}"></head>
+<body>
+<div th:replace="~{fragments/header :: topBar('Teacher')}"></div>
+
+<div>
+    <h2 th:if="${subjects.isEmpty()}">There are no any subjects at your schedule</h2>
+    <ul id="mainList">
+        <th:block th:each="entry, iter : ${subjects}">
+            <li class="subject" th:onclick="'hide_table(' + ${iter.index} + ')'"
+                th:text="${entry.key}">Subject</li>
+            <table class="subjList">
+                <tr>
+                    <th>Group</th>
+                    <th>Population</th>
+                </tr>
+                <tr th:each="group : ${entry.value}">
+                    <td>
+                        <a th:href="@{'/schedule/gr' + ${group.id} + '/' + ${#strings.replace(entry.key, ' ', '_')} + '/'}"
+                           th:text="'Group' + ${group.id}">Group</a>
+                    </td>
+                    <td th:text="${group.population}">0</td>
+                </tr>
+            </table>
+        </th:block>
+    </ul>
+</div>
+
+</body>
+</html>

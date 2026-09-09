@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: pageHead}"></head>
+<body>
+<div th:replace="~{fragments/header :: topBar('Student')}"></div>
+<h3 th:text="'Group ' + ${groupId}">Group</h3>
+
+<div>
+    <h2 th:if="${subjects.isEmpty()}">There are no any subjects at your schedule</h2>
+    <ul id="mainList">
+        <th:block th:each="subject, iter : ${subjects}">
+            <li class="subject" th:onclick="'hide_table(' + ${iter.index} + ')'"
+                th:text="${subject.subjectName} + ' | Lecturer: ' + ${subject.teacherName}">Subject</li>
+            <table class="subjList">
+                <tr>
+                    <th>Lesson</th>
+                    <th>Date</th>
+                    <th>Mark</th>
+                    <th>Comment</th>
+                </tr>
+                <tr th:each="lesson : ${subject.lessons}">
+                    <td th:text="${lesson.lessonName}">Lesson</td>
+                    <td th:text="${lesson.date}">Date</td>
+                    <td th:text="${lesson.markText}">Mark</td>
+                    <td th:text="${lesson.commentText}">Comment</td>
+                </tr>
+            </table>
+        </th:block>
+    </ul>
+</div>
+
+<div><button class="AddLessonButton"><a href="#zatemnenieRemoveLesson">Show graphics</a></button></div>
+
+<div id="zatemnenieRemoveLesson">
+    <div id="oknoRemove" class="modal animate">
+        <form th:action="@{'/schedule/graphic/' + ${groupId} + '/'}" name="graph" method="get">
+            <div class="container">
+                <label for="subjectName"><b>Subject</b></label>
+                <select id="subjectName" name="SubjectName" required="required">
+                    <option value="">Chose subject</option>
+                    <option th:each="subject : ${subjects}"
+                            th:value="${subject.subjectName}"
+                            th:text="${subject.subjectName}">Subject</option>
+                </select>
+            </div>
+            <div class="container">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+        <button class="close"><a href="#">Close</a></button>
+    </div>
+</div>
+
+</body>
+</html>

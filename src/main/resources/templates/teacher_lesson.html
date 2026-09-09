@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: pageHead}"></head>
+<body>
+<div th:replace="~{fragments/header :: topBar('Teacher')}"></div>
+<h3 th:text="'Schedule of Group ' + ${groupId}">Group</h3>
+
+<div>
+    <ul id="mainList">
+        <li class="subject"
+            th:text="${subjectName} + ' | ' + ${lessonInfo.lessonName} + ' | ' + ${lessonInfo.date}">Lesson</li>
+        <button id="ChangeButton"><a href="#zatemnenie">Change</a></button>
+        <table class="lessonList">
+            <tr>
+                <th>Student</th>
+                <th>Mark</th>
+                <th>Comment</th>
+            </tr>
+            <tr th:each="row : ${journal}">
+                <td th:text="${row.studentName}">Student</td>
+                <td th:text="${row.markText}">Mark</td>
+                <td th:text="${row.commentText}">Comment</td>
+            </tr>
+        </table>
+    </ul>
+</div>
+
+<div><button><a href="/schedule/">To the main page</a></button></div>
+
+<div id="zatemnenie">
+    <div id="okno" class="modal animate">
+        <form method="post">
+            <div class="container">
+                <label for="student"><b>Student</b></label>
+                <select id="student" name="Student" required="required">
+                    <option value="">Chose student</option>
+                    <option th:each="row : ${journal}" th:value="${row.studentUn}"
+                            th:text="${row.studentName}">Student</option>
+                </select>
+            </div>
+            <div class="container">
+                <label for="mark"><b>Mark</b></label>
+                <select id="mark" name="Mark" required="required">
+                    <option value="">Choose Mark</option>
+                    <option value="0"></option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+            <div class="container">
+                <label for="comment"><b>Comment<br></b></label>
+                <textarea id="comment" name="Comment" placeholder="Enter comment"></textarea>
+            </div>
+            <div class="container">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+        <button class="close"><a href="#">Close</a></button>
+    </div>
+</div>
+
+</body>
+</html>
