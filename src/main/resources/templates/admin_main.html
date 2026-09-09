@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: pageHead}"></head>
+<body>
+<div th:replace="~{fragments/header :: topBar('Admin')}"></div>
+
+<div>
+    <ul id="mainList">
+        <li class="subject" onclick="hide_table(0)">Groups</li>
+        <table class="subjList">
+            <tr>
+                <th>Group</th>
+                <th>Population</th>
+            </tr>
+            <tr th:each="group : ${groups}">
+                <td><a th:href="@{'/schedule/find_group/' + ${group.id} + '/'}"
+                       th:text="'Group ' + ${group.id}">Group</a></td>
+                <td th:text="${group.population}">0</td>
+            </tr>
+        </table>
+        <li class="subject" onclick="hide_table(1)">Teachers</li>
+        <table class="subjList">
+            <tr>
+                <th>Name</th>
+                <th>Subjects</th>
+            </tr>
+            <tr th:each="teacher : ${teachers}">
+                <td th:text="${teacher.fullName}">Teacher</td>
+                <td th:text="${teacherSubjects[teacher.un]}">Subjects</td>
+            </tr>
+        </table>
+    </ul>
+</div>
+
+<div>
+    <button class="AddLessonButton"><a href="#zatemnenieAddLesson">Add group</a></button>
+    <button class="AddLessonButton"><a href="#zatemnenieRemoveGroup">Remove group</a></button>
+    <button class="AddLessonButton"><a href="#darknessAddTeacher">Add teacher</a></button>
+    <button class="AddLessonButton"><a href="#darknessRemoveTeacher">Remove teacher</a></button>
+    <button class="AddLessonButton"><a href="#darknessAddSubject">Add Subject</a></button>
+    <button class="AddLessonButton"><a href="#darknessRemoveSubject">Remove Subject</a></button>
+</div>
+
+<div th:if="${newUsername != null}">
+    <button><a href="#zatemnenie">Get login and password</a></button>
+</div>
+
+<div id="zatemnenie" th:if="${newUsername != null}">
+    <div id="okno" class="modal animate">
+        <div>
+            <p>Login: <span th:text="${newUsername}"></span><br>
+               Password: <span th:text="${newPassword}"></span></p>
+        </div>
+        <button class="close"><a href="#">Close</a></button>
+    </div>
+</div>
+
+<div id="zatemnenieAddLesson">
+    <div id="oknoAdd" class="modal animate">
+        <form th:action="@{/schedule/add_group/}" name="add" method="get">
+            <div class="container">
+                <label for="groupNumber"><b>Group Number<br></b></label>
+                <input type="number" th:min="${nextGroupId}" id="groupNumber" name="groupId"
+                       placeholder="Enter the number of group" required>
+            </div>
+            <div class="container">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+        <button class="close"><a href="#">Close</a></button>
+    </div>
+</div>
+
+<div id="zatemnenieRemoveGroup">
+    <div id="oknoGroup" class="modal animate">
+        <form th:action="@{/schedule/remove_group/}" name="removeGroup" method="get">
+            <div class="container">
+                <label for="groupName"><b>Group number</b></label>
+                <select id="groupName" name="groupId" required="required">
+                    <option value="">Chose group</option>
+                    <option th:each="group : ${groups}" th:value="${group.id}"
+                            th:text="'Group ' + ${group.id}">Group</option>
+                </select>
+            </div>
+            <div class="container">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+        <button class="close"><a href="#">Close</a></button>
+    </div>
+</div>
+
+<div id="darknessAddTeacher">
+    <div id="windowAddTeacher" class="modal animate">
+        <form th:action="@{/schedule/add_teacher/}" name="add_teach" method="get">
+            <div class="container">
+                <label for="teacherName"><b>Teacher Name<br></b></label>
+                <input type="text" id="teacherName" name="TeacherName" placeholder="Enter teacher name" required>
+            </div>
+            <div class="container">
+                <label for="teacherSurName"><b>Teacher Surname<br></b></label>
+                <input type="text" id="teacherSurName" name="TeacherSurName" placeholder="Enter teacher surname" required>
+            </div>
+            <div class="container">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+        <button class="close"><a href="#">Close</a></button>
+    </div>
+</div>
+
+<div id="darknessRemoveTeacher">
+    <div id="windowRemoveTeacher" class="modal animate">
+        <form th:action="@{/schedule/remove_teacher/}" name="removeTeacher" method="get">
+            <div class="container">
+                <label for="removeTeacherName"><b>Teacher Name</b></label>
+                <select id="removeTeacherName" name="teacherId" required="required">
+                    <option value="">Chose teacher name</option>
+                    <option th:each="teacher : ${teachers}" th:value="${teacher.un}"
+                            th:text="${teacher.fullName}">Teacher</option>
+                </select>
+            </div>
+            <div class="container">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+        <button class="close"><a href="#">Close</a></button>
+    </div>
+</div>
+
+<div id="darknessAddSubject">
+    <div id="windowAddSubject" class="modal animate">
+        <form th:action="@{/schedule/add_subject/}" name="addSubject" method="get">
+            <div class="container">
+                <label for="subjName"><b>Subject name<br></b></label>
+                <input type="text" id="subjName" name="SubjectName" placeholder="Enter subject name" required>
+            </div>
+            <div class="container">
+                <label for="chooseTeacher"><b>Teacher Name</b></label>
+                <select id="chooseTeacher" name="Teacher" required="required">
+                    <option value="">Chose teacher name</option>
+                    <option th:each="teacher : ${teachers}" th:value="${teacher.un}"
+                            th:text="${teacher.fullName}">Teacher</option>
+                </select>
+            </div>
+            <div class="container">
+                <label for="chooseGroup"><b>Group</b></label>
+                <select id="chooseGroup" name="Group" required="required">
+                    <option value="">Chose group</option>
+                    <option th:each="group : ${groups}" th:value="${group.id}"
+                            th:text="'Group' + ${group.id}">Group</option>
+                </select>
+            </div>
+            <div class="container">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+        <button class="close"><a href="#">Close</a></button>
+    </div>
+</div>
+
+<div id="darknessRemoveSubject" class="modal">
+    <div id="windowRemoveSubject" class="animate">
+        <form th:action="@{/schedule/remove_subject/}" name="removeSubject" method="get">
+            <div class="container">
+                <label for="removeSubjectTeacherName"><b>Teacher name</b></label>
+                <select id="removeSubjectTeacherName" class="StyleSelectBox" name="teacherUn" required>
+                    <option value="">Choose teacher</option>
+                    <option th:each="teacher : ${teachers}" th:value="${teacher.un}"
+                            th:text="${teacher.fullName}">Teacher</option>
+                </select>
+            </div>
+            <div>
+                <label for="removeSubjectName"><b>Subject name</b></label>
+                <select id="removeSubjectName" class="StyleSelectBox" name="subjectName" disabled required>
+                    <option value="">Choose subject</option>
+                </select>
+            </div>
+            <script th:inline="javascript">
+                const allSubjects = /*[[${teacherSubjects}]]*/ {};
+                const teacherSelect = document.getElementById('removeSubjectTeacherName');
+                const subjectSelect = document.getElementById('removeSubjectName');
+                teacherSelect.onchange = function () {
+                    subjectSelect.innerHTML = '<option value="">Choose subject</option>';
+                    const subjects = allSubjects[this.value] || [];
+                    subjectSelect.disabled = subjects.length === 0;
+                    for (const subject of subjects) {
+                        const option = document.createElement('option');
+                        option.value = subject;
+                        option.textContent = subject;
+                        subjectSelect.appendChild(option);
+                    }
+                };
+            </script>
+            <div class="container">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+        <button class="close"><a href="#">Close</a></button>
+    </div>
+</div>
+
+</body>
+</html>

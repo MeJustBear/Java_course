@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: pageHead}"></head>
+<body>
+<div th:replace="~{fragments/header :: topBar('Admin')}"></div>
+<h3 th:text="'Schedule of Group ' + ${groupId}">Group</h3>
+
+<div>
+    <ul id="mainList">
+        <li class="studentList" th:each="student : ${students}"
+            th:text="${student.fullName} + ' | id :' + ${student.un}">Student</li>
+    </ul>
+</div>
+
+<div>
+    <button><a href="/schedule/admin/">To the main page</a></button>
+    <button class="AddLessonButton"><a href="#zatemnenieAddLesson">Add Student</a></button>
+    <button class="AddLessonButton"><a href="#zatemnenieRemoveLesson">Remove Student</a></button>
+</div>
+
+<div th:if="${newUsername != null}">
+    <button><a href="#zatemnenie">Get login and password</a></button>
+</div>
+
+<div id="zatemnenie" th:if="${newUsername != null}">
+    <div id="okno" class="modal animate">
+        <div>
+            <p>Login: <span th:text="${newUsername}"></span><br>
+               Password: <span th:text="${newPassword}"></span></p>
+        </div>
+        <button class="close"><a href="#">Close</a></button>
+    </div>
+</div>
+
+<div id="zatemnenieAddLesson">
+    <div id="oknoAdd" class="modal animate">
+        <form th:action="@{'/schedule/gr' + ${groupId} + '/add_student/'}" name="add" method="get">
+            <div class="container">
+                <label for="studentName"><b>Student Name<br></b></label>
+                <input type="text" id="studentName" name="StudentName" placeholder="Enter student name" required>
+            </div>
+            <div class="container">
+                <label for="studentSurName"><b>Student Surname<br></b></label>
+                <input type="text" id="studentSurName" name="StudentSurName" placeholder="Enter student surname" required>
+            </div>
+            <div class="container">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+        <button class="close"><a href="#">Close</a></button>
+    </div>
+</div>
+
+<div id="zatemnenieRemoveLesson">
+    <div id="oknoRemove" class="modal animate">
+        <form th:action="@{'/schedule/gr' + ${groupId} + '/remove_student/'}" name="rmv" method="get">
+            <div class="container">
+                <label for="removeStudentName"><b>Student Name</b></label>
+                <select id="removeStudentName" name="StudentName" required="required">
+                    <option value="">Chose student</option>
+                    <option th:each="student : ${students}" th:value="${student.un}"
+                            th:text="${student.fullName}">Student</option>
+                </select>
+            </div>
+            <div class="container">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+        <button class="close"><a href="#">Close</a></button>
+    </div>
+</div>
+
+</body>
+</html>

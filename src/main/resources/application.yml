@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: online-schedule
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/schedule}
+    username: ${SPRING_DATASOURCE_USERNAME:schedule}
+    password: ${SPRING_DATASOURCE_PASSWORD:schedule}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+  cache:
+    type: redis
+
+server:
+  port: 8080
